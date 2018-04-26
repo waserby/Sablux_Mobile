@@ -1,0 +1,57 @@
+<!--
+  Generated template for the SlidesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Bienvenue</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="tutorial-page">
+
+  <ion-slides pager>
+
+    <ion-slide *ngFor="let slide of slides"> <!-- Début Boucle Slide -->
+      <ion-toolbar>
+        <ion-buttons end>
+          <button ion-button color="primary" (click)="startApp()">Passer</button>
+        </ion-buttons>
+      </ion-toolbar>
+      <img [src]="slide.image" class="slide-image"/>      
+      <h2 class="slide-title" [innerHTML]="slide.title"></h2>
+      <p [innerHTML]="slide.description"></p>
+    </ion-slide> <!--FIN slide Bouclé-->
+
+    <ion-slide>
+      <ion-toolbar>
+      </ion-toolbar>
+      <img src="assets/img/ready.png" class="slide-image"/>
+      <h2 class="slide-title">Prêt à commencer?</h2>
+      <button ion-button large clear icon-end color="primary" (click)="startApp()">
+        Continuer
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>
+
+
+
+<!-- <ion-grid *ngIf="slide.image1">
+  <ion-row>
+    <ion-col col-6><img [src]="slide.image1" class="slide-image"/></ion-col>
+    <ion-col col-6><img [src]="slide.image2" class="slide-image"/></ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col col-6><img [src]="slide.image3" class="slide-image"/></ion-col>
+    <ion-col col-6><img [src]="slide.image4" class="slide-image"/></ion-col>
+  </ion-row>
+</ion-grid> -->

@@ -1,0 +1,8 @@
+{
+  "name": "Sablux",
+  "app_id": "a3dda5d4",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
