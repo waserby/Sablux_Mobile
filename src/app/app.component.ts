@@ -23,11 +23,10 @@ export class MyApp {
   constructor (public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
     this.initializeApp();
 
-    // used for an example of ngFor and navigation
+    // LA LISTE DES PAGES used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage },
-      { title: 'Slides', component: SlidesPage }
+      { title: 'Programmes', component: HomePage },
+      { title: 'Liste', component: ListPage }
     ];
 
   }// FIN CONSTRUCTEUR
@@ -40,12 +39,15 @@ export class MyApp {
       //Pour montrer le Slide une seule fois
       this.storage.get('slideshow').then((result) => {
 
-        if(result==='deja'){//Si les slides ont déja été montrés, 
+        if(result==='dejaouvert')
+        {//Si les slides ont déja été montrés, 
+
           this.rootPage = HomePage;
           console.log("Slide déja montré");
+
         } else {// Si SlidesPage n'est pas encore montré, on montre et on passe la variable a déja montré et on met rootPage a HomePage pour la prochaine connexion
           this.rootPage = "SlidesPage";
-          this.storage.set('slideshow', "deja");
+          this.storage.set('slideshow', "dejaouvert");
           console.log("Slide");
         }
  
