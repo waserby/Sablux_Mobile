@@ -1,27 +1,92 @@
+<!-- <ion-list>
+  <ion-item-sliding *ngFor="let country of countries">
+    <ion-item>
+      <ion-card>
+
+          <img [src]="urlImg" (click)="show()" />
+          <ion-fab right bottom>
+            <button ion-fab (click)="edit()">
+              <ion-icon name="brush"></ion-icon>
+            </button>
+          </ion-fab>
+          <div class="card-title">Amsterdam</div>
+
+      </ion-card>
+    </ion-item>
+  </ion-item-sliding>
+</ion-list> -->
+
+
+
+<!-- <ion-content class="card-background-page">
+  <ion-card *ngFor="let item of progs">
+    <img [src]="item.srcimg"/>
+    <div class="card-title">{{item.nom}}</div>
+    <div class="card-subtitle">{{item.zone}}</div>
+  </ion-card>
+</ion-content> -->
+
+
+
+<ion-header>
+  <ion-navbar no-border-bottom>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Nos programmes</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar no-border-top>
+    <ion-segment [(ngModel)]="etatsegment"><!-- On bind à la variable etat  -->
+      <ion-segment-button value="realiser" class="segment-activated" ><!-- Dans ce segment, etat = realiser  -->
+        Réalisés
+      </ion-segment-button>
+      <ion-segment-button value="cours"><!-- Dans ce segment, etat = cours  -->
+        En Cours
+      </ion-segment-button>
+      <ion-segment-button value="venir"><!-- Dans ce segment, etat = venir  -->
+        A Venir
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="card-background-page">
-  
-    <ion-card>
-      <img src="assets/img/programmes/colline.jpg"/>
-      <div class="card-title">Colline</div>
-      <div class="card-subtitle">Keur Gorgui</div>
-    </ion-card>
-  
-    <ion-card>
-      <img src="assets/img/programmes/dahlia.png"/>
-      <div class="card-title">DAHLIA</div>
-      <div class="card-subtitle">Sotrac Mermoz</div>
-    </ion-card>
-  
-    <ion-card>
-      <img src="assets/img/programmes/kora.png"/>
-      <div class="card-title">KORA</div>
-      <div class="card-subtitle">Sacré Coeur</div>
-    </ion-card>
-  
-    <ion-card>
-      <img src="assets/img/programmes/lierre.jpg"/>
-      <div class="card-title">LIERRE</div>
-      <div class="card-subtitle">Mermoz</div>
-    </ion-card>
-  
+  <div [ngSwitch]="etatsegment">
+    <div *ngSwitchCase="'realiser'">
+
+      <div *ngFor="let item of progs">
+        <ion-card *ngIf="'rea'== item.status" (click)="presentModal({itemid: item.id})" >
+          <img [src]="item.srcimg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+
+    <div *ngSwitchCase="'cours'">
+
+      <div *ngFor="let item of progs">
+        <ion-card  *ngIf="'cours'== item.status" (click)="presentModal({itemid: item.id})">
+          <img [src]="item.srcimg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+
+    <div *ngSwitchCase="'venir'">
+
+      <div *ngFor="let item of progs">
+        <ion-card  *ngIf="'venir'== item.status" (click)="presentModal({itemid: item.id})">
+          <img [src]="item.srcimg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+  </div>
 </ion-content>

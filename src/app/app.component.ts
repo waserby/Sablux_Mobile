@@ -51,7 +51,7 @@ export class MyApp {
           console.log("Slide");
         }
  
-        this.loader.dismiss();
+        this.loader.dismiss();// On fait disparaitre le loader
  
       });
     });
