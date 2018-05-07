@@ -3,12 +3,63 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Nos programmes</ion-title>
+    <ion-title>Accueil</ion-title>
   </ion-navbar>
 </ion-header>
 
-<programmes-partial></programmes-partial>
+<ion-content no-padding> 
+    <ion-grid no-padding>
+        
+        <ion-row no-padding>
+          <ion-col col-12 no-padding>
+            <ion-card no-padding (click)="openPage({itemid: item.id})">
+              <img no-padding src="assets/img/programmes/kora.png"/>
+              <div class="card-title"><ion-icon name="home"></ion-icon> Nos programmes immobiliers</div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row no-padding> 
+          <ion-col col-12 no-padding no-margin>
+              <ion-list no-margin>
+                <ion-item-sliding no-margin no-padding>
+                    <ion-item no-margin no-padding>
+                        <ion-card no-padding>
+                            <img no-padding src="assets/img/programmes/dahlia.png"/>
+                            <div class="card-title"> <ion-icon name="search"></ion-icon> Trouver un bien immobilier</div>
+                          </ion-card>
+                    </ion-item>
+                    <ion-item-options>
+                      <button ion-button color="light" icon-start>
+                        <ion-icon name="ios-more"></ion-icon>
+                        A Louer
+                      </button>
+                      <button ion-button color="primary" icon-start>
+                        <ion-icon name="text"></ion-icon>
+                        A vendre
+                      </button>
+                    </ion-item-options>
+                </ion-item-sliding>
+              </ion-list>
+          </ion-col>
+        </ion-row>
 
-  <!-- <h3>Ionic Menu Starter</h3>
+        <ion-row no-padding>
+            <ion-col col-12 no-padding>
+              <ion-card no-padding>
+                <img no-padding src="assets/img/programmes/dahlia.png"/>
+                <div class="card-title">Acceder à votre espace membre</div>
+              </ion-card>
+            </ion-col>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button> -->
+            <ion-col col-12 no-padding>
+              <ion-card no-padding>
+                <img no-padding src="assets/img/programmes/dahlia.png"/>
+                <div class="card-title">Contactez-Nous</div>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+
+    </ion-grid>
+</ion-content>
+

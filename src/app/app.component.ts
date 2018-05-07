@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage';
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { SlidesPage } from '../pages/slides/slides';
+import { ListeProgrammesPage } from '../pages/liste-programmes/liste-programmes';
 
 @Component({
   templateUrl: 'app.html'
@@ -25,8 +26,9 @@ export class MyApp {
 
     // LA LISTE DES PAGES used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Programmes', component: HomePage },
-      { title: 'Liste', component: ListPage }
+      { title: 'Accueil', component: HomePage },
+      // { title: 'Liste', component: ListPage },
+      { title: 'Nos programmes', component: ListeProgrammesPage }
     ];
 
   }// FIN CONSTRUCTEUR

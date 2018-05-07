@@ -1,3 +1,44 @@
 page-home {
+    ion-card {
+        position: relative;
+        text-align: center;
+      }
+    
+      .card
+        {
+            margin: 0px !important;
+            width: 100%;
+        }
+      .card-title {
+        position: absolute;
+        top: 45%;
+        font-size: 1.5em;
+        width: 100%;
+        font-weight: bold;
+        color: rgba(250, 250, 250, 0.973);
+        font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+        // #913E98
+      }
+
+      .no-padding {// Pour enlever le padding pour que ca soit full
+        padding: 0px !important;
+    }
+
+    //---------Pour Enlever toutes les bordures des images qui slident
+    ion-label{
+        margin: 0px !important;
+    }
+    .item-inner{
+        padding-right: 0px !important;
+    }
+
+    .text-justif{
+        text-align: justify;
+        line-height: 1.5;
+        font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+    }
+
+    //--------------Fin enlever
+    
     
 }
