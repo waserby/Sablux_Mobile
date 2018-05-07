@@ -56,7 +56,7 @@
     <div *ngSwitchCase="'realiser'">
 
       <div *ngFor="let item of progs">
-        <ion-card *ngIf="'rea'== item.status" (click)="presentModal({itemid: item.id})" >
+        <ion-card *ngIf="'rea'== item.status" (click)="opendetailprogramme({itemid: item.id})" >
           <img [src]="item.srcimg"/>
           <div class="card-title">{{item.nom}}</div>
           <div class="card-subtitle">{{item.zone}}</div>
@@ -68,7 +68,7 @@
     <div *ngSwitchCase="'cours'">
 
       <div *ngFor="let item of progs">
-        <ion-card  *ngIf="'cours'== item.status" (click)="presentModal({itemid: item.id})">
+        <ion-card  *ngIf="'cours'== item.status" (click)="opendetailprogramme({itemid: item.id})">
           <img [src]="item.srcimg"/>
           <div class="card-title">{{item.nom}}</div>
           <div class="card-subtitle">{{item.zone}}</div>
@@ -80,7 +80,7 @@
     <div *ngSwitchCase="'venir'">
 
       <div *ngFor="let item of progs">
-        <ion-card  *ngIf="'venir'== item.status" (click)="presentModal({itemid: item.id})">
+        <ion-card  *ngIf="'venir'== item.status" (click)="opendetailprogramme({itemid: item.id})">
           <img [src]="item.srcimg"/>
           <div class="card-title">{{item.nom}}</div>
           <div class="card-subtitle">{{item.zone}}</div>

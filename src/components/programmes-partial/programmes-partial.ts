@@ -6,8 +6,9 @@ import { ProgrammeModel } from '../../models/programme-model';
 //Services
 import { ProgsService } from '../../providers/services/progs.service';
 
-//For Modal
-import { ModalController } from 'ionic-angular';
+// //For Modal
+// import { ModalController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';// Pour naviguer
 
 @Component({
   selector: 'programmes-partial',
@@ -17,7 +18,7 @@ export class ProgrammesPartialComponent implements OnInit {
   progs: ProgrammeModel[];//Tableau de programme LOCAL
   etatsegment: String = "realiser";// On met la variable du NgModel à realiser pour que le segment realiser soit actif au départ
   
-  constructor(private progservice: ProgsService,public modalCtrl: ModalController) {}
+  constructor(private progservice: ProgsService,public navCtrl: NavController) {}
 
   ngOnInit(){
     this.getProgs();
@@ -27,8 +28,7 @@ export class ProgrammesPartialComponent implements OnInit {
     this.progservice.getProgs().subscribe(progs => this.progs = progs);
   }
 
-  presentModal(itemid: number) {//Pour afficher le modal (Un modal c'est comme un POPUP pour mobile)
-    let modal = this.modalCtrl.create('page-detail-programme', itemid);//J'envoi la valeur à travers un modalController
-    modal.present();
+  opendetailprogramme(itemid: number) {//Pour afficher le modal (Un modal c'est comme un POPUP pour mobile)
+    let modal = this.navCtrl.push('page-detail-programme', itemid);//J'envoi la valeur à travers un modalController
   }
 }

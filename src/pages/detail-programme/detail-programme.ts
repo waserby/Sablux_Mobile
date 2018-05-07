@@ -21,22 +21,21 @@ export class DetailProgrammePage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,private progservice: ProgsService) {
     
   }
-  
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
   ngOnInit(){
     this.getProgs();//Je récupère encore la liste des programmes pour chercher dedans celui correspondant au id recu from la page listes des programmes
     this.chooseprog = this.progs[this.navParams.get('itemid')];//Je recupère le programme correspondant à l'id itemid
     console.log(this.chooseprog.id);
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
-  }
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetailProgrammePage');
   }
 
-  getProgs(): void {//MEthode qui recupère les programmes grace à la méthode créee dans le service.
+  getProgs(): void {//Methode qui recupère les programmes grace à la méthode créee dans le service.
     this.progservice.getProgs().subscribe(progs => this.progs = progs);
   }
 

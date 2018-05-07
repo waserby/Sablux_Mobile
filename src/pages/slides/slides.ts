@@ -28,7 +28,7 @@ export class SlidesPage {
     {
       title: "Bienvenue sur votre application réservée à l'immobilier!",
       description: "Vous pouvez obtenir des informations sur nos nouveaux programmes et services, rechercher un appartement ou encore envoyer un retour à Sablux",
-      image: "assets/img/sablier.jpg",
+      image: "assets/img/sablier.png",
     },
     {
       title: "C'est quoi Sablux?",

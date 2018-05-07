@@ -37,7 +37,7 @@ export class MyApp {
     this.platform.ready().then(() => {
     
       //Pour montrer le Slide une seule fois
-      this.storage.get('slideshow').then((result) => {
+      this.storage.get('ifslides').then((result) => {
 
         if(result==='dejaouvert')
         {//Si les slides ont déja été montrés, 
@@ -47,7 +47,7 @@ export class MyApp {
 
         } else {// Si SlidesPage n'est pas encore montré, on montre et on passe la variable a déja montré et on met rootPage a HomePage pour la prochaine connexion
           this.rootPage = "SlidesPage";
-          this.storage.set('slideshow', "dejaouvert");
+          this.storage.set('ifslides', "dejaouvert");
           console.log("Slide");
         }
  
