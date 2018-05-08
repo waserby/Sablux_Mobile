@@ -55,7 +55,7 @@ export class HomePage {
 
 //Methode pour ouvrir les programmes réalisés, en cours ou a venir selon le bouton clicquer
   openListeProgrammes(valeur: any){ // On recupère le type de programme et on envoi à la page concernée
-    this.navCtrl.push(ListeProgrammesPage, valeur);
+    this.navCtrl.setRoot(ListeProgrammesPage, valeur);
     //{typeDeProgramme: 'rea'}
   }
 }
