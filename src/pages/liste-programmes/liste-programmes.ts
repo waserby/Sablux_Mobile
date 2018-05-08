@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
@@ -13,10 +13,18 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   selector: 'page-liste-programmes',
   templateUrl: 'liste-programmes.html',
 })
-export class ListeProgrammesPage {
+export class ListeProgrammesPage implements OnInit {
+  TypeProgrammeAccueil: String;
+  typeProg : String;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
+
+  ngOnInit(){
+    this.typeProg = this.navParams.get('typeDeProgramme'); //On recupère le type de programme choisi et on stocke
+    
+  }
+  
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ListeProgrammesPage');

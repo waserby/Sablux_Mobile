@@ -38,13 +38,13 @@
 
   <ion-toolbar no-border-top>
     <ion-segment [(ngModel)]="etatsegment"><!-- On bind à la variable etat  -->
-      <ion-segment-button value="realiser" class="segment-activated" ><!-- Dans ce segment, etat = realiser  -->
+      <ion-segment-button value="realiser"> <!--   [ngClass]="{'segment-activated': item =='rea'}"="segment-activated" Dans ce segment, etat = realiser  -->
         Réalisés
       </ion-segment-button>
-      <ion-segment-button value="cours"><!-- Dans ce segment, etat = cours  -->
+      <ion-segment-button value="cours"  > <!-- Dans ce segment, etat = cours  -->
         En Cours
       </ion-segment-button>
-      <ion-segment-button value="venir"><!-- Dans ce segment, etat = venir  -->
+      <ion-segment-button value="venir"> <!--  [ngClass]="{'segment-activated': item =='venir'}" Dans ce segment, etat = venir  -->
         A Venir
       </ion-segment-button>
     </ion-segment>
