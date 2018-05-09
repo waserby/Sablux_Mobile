@@ -38,24 +38,26 @@ $colors: (
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  sablux:     #913E98,//waserby custom
+  gris:       #9a9a9a,
 );
 
 
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
-
-
+$toolbar-ios-active-color:#913E98;//Couleur de segment (c'était bleu)
+$menu-ios-box-shadow-color:#913E98; // Couleur de l'ombre du menu (c'était transparent)
 
 
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
-
-
-
-
+$toolbar-inactive-color:#913E98;
+$toolbar-md-text-color:#913E98;
+$toolbar-md-active-color:#913E98;
+$menu-md-box-shadow-color:#913E98;
 // App Windows Variables
 // --------------------------------------------------
 // Windows only Sass variables can go here

@@ -16,20 +16,20 @@
               <ion-item-sliding no-margin no-padding #slidingItem1 >
                 <ion-item no-margin no-padding #item1 (click)="openOption(slidingItem1, item1,'grand')">
                   <ion-card no-padding >
-                    <img no-padding src="assets/img/programmes/kora.png"/>
+                    <img no-padding src="assets/img/programmes/accueil/programmes.jpg"/>
                     <div class="card-title"><ion-icon name="home"></ion-icon> Nos programmes immobiliers</div>
                   </ion-card>
                 </ion-item>
                 <ion-item-options >
-                  <button ion-button color="secondary" icon-start (click)="openListeProgrammes({typeDeProgramme:'realiser'})">
+                  <button ion-button color="sablux" icon-start (click)="openListeProgrammes({typeDeProgramme:'realiser'})">
                     <ion-icon name="done-all"></ion-icon>
                     Réalisés
                   </button>
-                  <button color="light" ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'cours'})">
+                  <button color="gris" ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'cours'})">
                     <ion-icon name="ios-more"></ion-icon>
                     En Cours
                   </button>
-                  <button class="slidebutton" ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'venir'})">
+                  <button color="light"  ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'venir'})">
                     <ion-icon name="home"></ion-icon>
                     A Venir
                   </button>
@@ -45,7 +45,7 @@
                 <ion-item-sliding no-margin no-padding #slidingItem2>  <!-- On recupère le ion-item-sliding pour slider quand on clique-->
                     <ion-item no-margin no-padding #item2 (click)="openOption(slidingItem2, item2)">
                         <ion-card no-padding>
-                            <img no-padding src="assets/img/programmes/dahlia.png"/>
+                            <img no-padding src="assets/img/programmes/accueil/rechercheimmo.jpg"/>
                             <div class="card-title"> <ion-icon name="search"></ion-icon> Trouver un bien immobilier</div>
                           </ion-card>
                     </ion-item>
@@ -67,14 +67,14 @@
         <ion-row no-padding> <!-- ROW3:   Acceder à votre espace membre-->
           <ion-col col-12 no-padding>
             <ion-card no-padding>
-              <img no-padding src="assets/img/programmes/dahlia.png"/>
+              <img no-padding src="assets/img/programmes/accueil/espace.jpg"/>
               <div class="card-title">Acceder à votre espace membre</div>
             </ion-card>
           </ion-col>
 
           <ion-col col-12 no-padding>
             <ion-card no-padding>
-              <img no-padding src="assets/img/programmes/dahlia.png"/>
+              <img no-padding src="assets/img/programmes/accueil/contact.jpg"/>
               <div class="card-title">Contactez-Nous</div>
             </ion-card>
           </ion-col>

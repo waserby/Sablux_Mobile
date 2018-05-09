@@ -19,7 +19,7 @@ export class DetailProgrammePage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,private progservice: ProgsService) {
-    
+    // console.log(this.chooseprog.tabUrlImg[0]);
   }
   dismiss() {
     this.viewCtrl.dismiss();

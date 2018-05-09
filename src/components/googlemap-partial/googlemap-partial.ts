@@ -7,7 +7,7 @@ import {
   MarkerOptions,
   Marker
 } from '@ionic-native/google-maps';
-import { Component, OnInit } from "@angular/core/"; //2_ADD: ALL this for MAP
+import { Component, OnInit, Input } from "@angular/core/"; //2_ADD: ALL this for MAP
 import { Platform, NavParams } from 'ionic-angular';
 import { ProgsService } from '../../providers/services/progs.service';
 import { ProgrammeModel } from '../../models/programme-model';
@@ -18,7 +18,13 @@ import { ProgrammeModel } from '../../models/programme-model';
   templateUrl: 'googlemap-partial.html'
 })
 
-export class GooglemapPartialComponent  {
+export class GooglemapPartialComponent {
+  //@Input() progForMap: ProgrammeModel;
+  //Initialisation pour la MAP
+  latitude: Number; //From Detail Programme
+  longitude: Number; //From Detail Programme
+  marker_title: String; //From Detail Programme
+
   //Pour la map
   map: GoogleMap;
   //Initialisation des Programmes
@@ -38,6 +44,14 @@ export class GooglemapPartialComponent  {
   //   this.chooseprog = this.progs[this.navParams.get('itemid')];//Je recupère le programme correspondant à l'id itemid
   //   console.log(this.chooseprog.id);
   // }
+  ngOnInit(): void {
+    // this.latitude = this.progForMap.latitude;
+    // this.longitude = this.progForMap.longitude;
+    // this.marker_title = this.progForMap.nom;latitude:14.699362, longitude:-17.463098
+    this.latitude = 14.699362;
+    this.longitude = -17.463098;
+    this.marker_title = "SABLUX";
+  }
 
   ionViewDidEnter() {
    
@@ -70,7 +84,7 @@ export class GooglemapPartialComponent  {
         // Now you can use all methods safely.
         this.map.addMarker({
           // title: this.chooseprog.nom.toString(), //custom
-          title: 'SABLUX', //custom
+          title: this.marker_title.toString(), //custom
           icon: 'red',
           animation: 'DROP',
           position: {
