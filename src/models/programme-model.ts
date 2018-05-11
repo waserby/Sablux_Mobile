@@ -4,7 +4,7 @@ export class ProgrammeModel {
     srcimg: String;
     zone: String;
     status: String;
-    // latitude: Number;
-    // longitude: Number;
-    // tabUrlImg: String[];
+    latitude: number;
+    longitude: number;
+    tabUrlImg: String[];
 }

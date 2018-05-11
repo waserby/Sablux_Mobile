@@ -19,7 +19,7 @@ import { ProgrammeModel } from '../../models/programme-model';
 })
 
 export class GooglemapPartialComponent {
-  //@Input() progForMap: ProgrammeModel;
+  @Input() progForMap: ProgrammeModel; // On recoit le programme choisi from la page detail programme
   //Initialisation pour la MAP
   latitude: Number; //From Detail Programme
   longitude: Number; //From Detail Programme
@@ -27,17 +27,13 @@ export class GooglemapPartialComponent {
 
   //Pour la map
   map: GoogleMap;
-  //Initialisation des Programmes
-  progs: ProgrammeModel[];//Tableau de programme LOCAL
-  chooseprog: ProgrammeModel;
+  // //Initialisation des Programmes
+  // progs: ProgrammeModel[];//Tableau de programme LOCAL
+  // chooseprog: ProgrammeModel;
 
 
   //-----------------Constructeur et Methodes LIFECYCLE-------------------------------
-  constructor(public platform: Platform, private progservice: ProgsService, public navParams: NavParams) { 
-    this.platform.ready().then(() => {
-      this.loadMap();
-    });
-  }
+  constructor(public platform: Platform, private progservice: ProgsService, public navParams: NavParams) {}
 
   // ngOnInit(){
   //   this.getProgs();//Je récupère la liste des programmes pour chercher dedans celui correspondant au id recu from la page listes des programmes
@@ -48,9 +44,13 @@ export class GooglemapPartialComponent {
     // this.latitude = this.progForMap.latitude;
     // this.longitude = this.progForMap.longitude;
     // this.marker_title = this.progForMap.nom;latitude:14.699362, longitude:-17.463098
-    this.latitude = 14.699362;
-    this.longitude = -17.463098;
-    this.marker_title = "SABLUX";
+    // console.log("Nom : "+this.progForMap.nom+" Latitude : "+this.progForMap.tabUrlImg[0] );//TEST was
+    this.latitude = this.progForMap.latitude;
+    this.longitude = this.progForMap.longitude;
+    this.marker_title = this.progForMap.nom;
+    this.platform.ready().then(() => {
+      this.loadMap();
+    });
   }
 
   ionViewDidEnter() {
@@ -66,10 +66,10 @@ export class GooglemapPartialComponent {
    let mapOptions: GoogleMapOptions = {
      camera: {
         target: {
-          lat: 14.699362,
-          lng: -17.463098
+          lat: this.latitude,
+          lng: this.longitude
         },
-        zoom: 18,
+        zoom: 15,
         tilt: 30
       }
     };
@@ -85,11 +85,11 @@ export class GooglemapPartialComponent {
         this.map.addMarker({
           // title: this.chooseprog.nom.toString(), //custom
           title: this.marker_title.toString(), //custom
-          icon: 'red',
+          icon: 'green',
           animation: 'DROP',
           position: {
-            lat: 14.699362,
-            lng: -17.463098
+            lat: this.progForMap.latitude,
+            lng: this.progForMap.longitude
           }
         })
         .then(marker => {
