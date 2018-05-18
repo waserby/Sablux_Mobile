@@ -5,6 +5,9 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
 import { ComponentsModule } from '../components/components.module';
 import { ListeProgrammesPageModule } from '../pages/liste-programmes/liste-programmes.module'; //Module d'une Page
+import {AngularFireModule} from 'angularfire2';
+import {AngularFireDatabaseModule} from 'angularfire2/database';
+import { FIREBASE_CONFIG } from './firebase.credentials';
 
 
 //Pages
@@ -27,8 +30,11 @@ import { ListeProgrammesPage } from '../pages/liste-programmes/liste-programmes'
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(), //Pour le Storage
+    ListeProgrammesPageModule,
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireDatabaseModule,
     ComponentsModule,
-    ListeProgrammesPageModule
+    
   ],
   bootstrap: [IonicApp],
   entryComponents: [

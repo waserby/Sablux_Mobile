@@ -55,6 +55,45 @@
   <div [ngSwitch]="etatsegment">
     <div *ngSwitchCase="'realiser'">
 
+      <div *ngFor="let item of progsFireBase | async">
+        <ion-card *ngIf="'rea'== item.status" (click)="opendetailprogramme({itemall: item})" >
+          <img class="filtre-black" [src]="item.facadeImg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+
+    <div *ngSwitchCase="'cours'">
+
+      <div *ngFor="let item of progsFireBase | async">
+        <ion-card  *ngIf="'cours'== item.status" (click)="opendetailprogramme({itemid: item.id})">
+          <img class="filtre-black" [src]="item.facadeImg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+
+    <div *ngSwitchCase="'venir'">
+
+      <div *ngFor="let item of progsFireBase | async">
+        <ion-card  *ngIf="'venir'== item.status" (click)="opendetailprogramme({itemid: item.id})">
+          <img class="filtre-black" [src]="item.facadeImg"/>
+          <div class="card-title">{{item.nom}}</div>
+          <div class="card-subtitle">{{item.zone}}</div>
+        </ion-card>
+      </div>
+
+    </div>
+  </div>
+</ion-content>
+<!-- <ion-content class="card-background-page">
+  <div [ngSwitch]="etatsegment">
+    <div *ngSwitchCase="'realiser'">
+
       <div *ngFor="let item of progs">
         <ion-card *ngIf="'rea'== item.status" (click)="opendetailprogramme({itemid: item.id})" >
           <img class="filtre-black" [src]="item.srcimg"/>
@@ -89,4 +128,4 @@
 
     </div>
   </div>
-</ion-content>
+</ion-content> -->

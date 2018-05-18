@@ -1,10 +1,12 @@
-export class ProgrammeModel {
+export interface ProgrammeModel {
+    key?: string;
     id: number;
-    nom:String;
-    srcimg: String;
+    nom: String;
+    facadeImg: String;
     zone: String;
     status: String;
     latitude: number;
     longitude: number;
     tabUrlImg: String[];
+    description: String;
 }

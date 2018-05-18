@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { ProgrammeModel } from '../../models/programme-model';
 
 import { ProgsService } from '../../providers/services/progs.service';
+import { ProgsProviderFireApi } from '../../providers/progs/progs';
+import { Observable } from 'rxjs';
 
 @IonicPage(
   {
@@ -14,10 +16,9 @@ import { ProgsService } from '../../providers/services/progs.service';
   templateUrl: 'detail-programme.html',
 })
 export class DetailProgrammePage {
-  progs: ProgrammeModel[];//Tableau de programme LOCAL
   chooseprog: ProgrammeModel;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,private progservice: ProgsService) {
+  constructor(private progsServiceFireApi: ProgsProviderFireApi , public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,private progservice: ProgsService) {
     // console.log(this.chooseprog.tabUrlImg[0]);
   }
   dismiss() {
@@ -25,18 +26,26 @@ export class DetailProgrammePage {
   }
 
   ngOnInit(){
-    this.getProgs();//Je récupère encore la liste des programmes pour chercher dedans celui correspondant au id recu from la page listes des programmes
-    this.chooseprog = this.progs[this.navParams.get('itemid')];//Je recupère le programme correspondant à l'id itemid
-    console.log(this.chooseprog.id);
+    this.chooseprog =  this.navParams.get('itemall')
+    console.log(this.chooseprog.nom);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetailProgrammePage');
   }
 
-  getProgs(): void {//Methode qui recupère les programmes grace à la méthode créee dans le service.
-    this.progservice.getProgs().subscribe(progs => this.progs = progs);
-  }
-
-  
 }
+
+
+//---------------------------SNIPPETS----------------------------
+
+//this.getProgs();//Je récupère encore la liste des programmes pour chercher dedans celui correspondant au id recu from la page listes des programmes
+//this.chooseprog = this.progs[this.navParams.get('itemall')];//Je recupère le programme correspondant à l'id itemid
+     
+// getProgs(): void {//Methode qui recupère les programmes grace à la méthode créee dans le service.
+//   this.progservice.getProgs().subscribe(progs => this.progs = progs);
+// }
+
+
+//progs: ProgrammeModel[];//Tableau de programme LOCAL
+  
