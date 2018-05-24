@@ -25,7 +25,6 @@ export class ListeProgrammesPage implements OnInit {
     
   }
   
-
   ionViewDidLoad() {
     console.log('ionViewDidLoad ListeProgrammesPage');
   }

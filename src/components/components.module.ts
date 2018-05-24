@@ -10,13 +10,22 @@ import { ProgsProviderFireApi } from '../providers/progs/progs';
 import { ProgsService } from '../providers/services/progs.service';
 import { GooglemapPartialComponent } from './googlemap-partial/googlemap-partial';
 import { Network } from '@ionic-native/network';
+import { FiltrePartialComponent } from './filtre-partial/filtre-partial';
+import { ResultatListPartialComponent } from './resultat-list-partial/resultat-list-partial';
+import { ResultatMapPartialComponent } from './resultat-map-partial/resultat-map-partial';
 
 @NgModule({
 	declarations: [ProgrammesPartialComponent,
-    GooglemapPartialComponent],
+    GooglemapPartialComponent,
+    FiltrePartialComponent,
+    ResultatListPartialComponent,
+    ResultatMapPartialComponent],
 	imports: [IonicModule, HttpClientModule],//ADD: A ajouter AUSSI
 	exports: [ProgrammesPartialComponent,
-    GooglemapPartialComponent],
+    GooglemapPartialComponent,
+    FiltrePartialComponent,
+    ResultatListPartialComponent,
+    ResultatMapPartialComponent],
 	providers: [
 		ProgsProviderFireApi,
 		ProgsService,

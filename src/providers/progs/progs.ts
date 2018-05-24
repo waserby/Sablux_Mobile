@@ -41,15 +41,16 @@ export class ProgsProviderFireApi {
       return this.progsList.remove(item.key);
   }
   //-------------END-CRUD-FIREBASE------------------
-  restGetProgs() {
+  
+  //--------------API-REST--------------------
+  restGet(url: string) {
     return new Promise(resolve => {
-      this.http.get(this.apiUrl).subscribe(data => {
+      this.http.get(url).subscribe(data => {
         resolve(data);
       }, err => {
         console.log(err);
       });
     });
   }
-
   //--------------API-REST--------------------
 }

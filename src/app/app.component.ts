@@ -9,6 +9,7 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { SlidesPage } from '../pages/slides/slides';
 import { ListeProgrammesPage } from '../pages/liste-programmes/liste-programmes';
+import { TrouverBienPage } from '../pages/trouver-bien/trouver-bien';
 
 @Component({
   templateUrl: 'app.html'
@@ -28,7 +29,9 @@ export class MyApp {
     this.pages = [
       { title: 'Accueil', component: HomePage },
       // { title: 'Liste', component: ListPage },
-      { title: 'Nos programmes', component: ListeProgrammesPage }
+      { title: 'Nos programmes', component: ListeProgrammesPage },
+      { title: 'Trouver un bien', component: TrouverBienPage }
+
     ];
 
   }// FIN CONSTRUCTEUR

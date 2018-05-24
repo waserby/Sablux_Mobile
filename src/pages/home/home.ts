@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, ItemSliding, Item } from 'ionic-angular';
 import { ListeProgrammesPage } from '../liste-programmes/liste-programmes';
+import { TrouverBienPage } from '../trouver-bien/trouver-bien';
 
 
 @Component({
@@ -57,5 +58,9 @@ export class HomePage {
   openListeProgrammes(valeur: any){ // On recupère le type de programme et on envoi à la page concernée
     this.navCtrl.setRoot(ListeProgrammesPage, valeur);
     //{typeDeProgramme: 'rea'}
+  }
+//Methode pour ouvrir la map recherche bien
+  openTrouverBien(valeur: any){ // On recupère le statut (louer/vendre)
+    this.navCtrl.setRoot(TrouverBienPage, valeur);
   }
 }
