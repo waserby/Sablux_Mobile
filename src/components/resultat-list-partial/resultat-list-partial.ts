@@ -3,6 +3,9 @@ import { Input } from '@angular/core';
 import { ProgsProviderFireApi } from '../../providers/progs/progs';
 import { ViewController } from 'ionic-angular';
 
+// For Modal
+import { ModalController } from 'ionic-angular';
+
 /**
  * Generated class for the ResultatListPartialComponent component.
  *
@@ -21,14 +24,25 @@ export class ResultatListPartialComponent implements OnInit {
 
 
   //METHODES LIFECYCLE
-  constructor( private progsServiceFireApi: ProgsProviderFireApi, public viewCtrl: ViewController) {}
+  constructor( private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
   ngOnInit(): void {
     this.urlProduits='http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
-    this.restGetProduits();
+    this.restGetProduits(); 
     console.log(this.itemIncomes);
   }
 
   //METHODES LOGIQUE METIERS
+  //Methodes boutons
+  public openContacter(){
+    var data = { typeContact : 'produit' };
+    var modalPage = this.modalCtrl.create('page-contact', data); 
+    modalPage.present(); 
+  }
+  public openAppeler(){
+    
+  }
+  
+
   //For Api REST
   restGetProduits() {
     this.progsServiceFireApi.restGet(this.urlProduits).then(data => {

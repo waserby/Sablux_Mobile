@@ -7,10 +7,12 @@ import { ComponentsModule } from '../components/components.module';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFireDatabaseModule} from 'angularfire2/database';
 import { FIREBASE_CONFIG } from './firebase.credentials';
+
 //Modules des pages ajoutées
 import { TrouverBienPageModule } from '../pages/trouver-bien/trouver-bien.module';
 import { ResultatRecherchePageModule } from '../pages/resultat-recherche/resultat-recherche.module';
 import { ListeProgrammesPageModule } from '../pages/liste-programmes/liste-programmes.module'; //Module d'une Page
+import { ContactPageModule } from '../pages/contact/contact.module';
 
 //Pages
 import { MyApp } from './app.component';
@@ -19,6 +21,7 @@ import { ListPage } from '../pages/list/list';
 import { ListeProgrammesPage } from '../pages/liste-programmes/liste-programmes';
 import { TrouverBienPage } from '../pages/trouver-bien/trouver-bien';
 import { ResultatRecherchePage } from '../pages/resultat-recherche/resultat-recherche';
+import { ContactPage } from '../pages/contact/contact';
 
 //Native
 import { StatusBar } from '@ionic-native/status-bar';
@@ -40,7 +43,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireDatabaseModule,
     ComponentsModule,
-    ResultatRecherchePageModule
+    ResultatRecherchePageModule,
+    ContactPageModule
     
   ],
   bootstrap: [IonicApp],
@@ -50,7 +54,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ListPage,
     ListeProgrammesPage,
     TrouverBienPage,
-    ResultatRecherchePage
+    ResultatRecherchePage,
+    ContactPage
   ],
   providers: [
     StatusBar,
