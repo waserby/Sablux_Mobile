@@ -17,7 +17,7 @@ import { Produit } from '../../models/produit-model';
 })
 export class ResultatRecherchePage implements OnInit {
   urlProduits: string;
-  incomes = {zone: "", type: "", prix: 0, etage: ""}; //On garde les critères du USER
+  incomes = {zone: "", type: "", prix: 0}; //On garde les critères du USER
   tabProduits: any;//Tableau de programme LOCAL: string;
   arrayResult: any[]=[]; //Tableau des resultats à afficher après filtre selon CRITERES
 
@@ -79,7 +79,7 @@ export class ResultatRecherchePage implements OnInit {
       }else {
         //Cas ou tous les critères sont renseignés.
         for (let item of this.tabProduits) {
-          if((item.zone == this.incomes.zone) && (item.type == this.incomes.type) && (item.etage == this.incomes.etage) && (item.price <= this.incomes.prix)) {//ZONE
+          if((item.zone == this.incomes.zone) && (item.typeproduit == this.incomes.type) && (item.price <= this.incomes.prix)) {//ZONE
 
             this.arrayResult.push(item);
             console.log("GOOD ZONE:  "+item.zone+"  TYPE : "+item.typeproduit+" etage "+item.niveauetage+" et qui coute "+item.price);
