@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 export class DetailProgrammePage {
   chooseprog: ProgrammeModel;
 
-  constructor(private progsServiceFireApi: ProgsProviderFireApi , public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,private progservice: ProgsService) {
+  constructor(private progsServiceFireApi: ProgsProviderFireApi , public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private progservice: ProgsService) {
     // console.log(this.chooseprog.tabUrlImg[0]);
   }
   dismiss() {

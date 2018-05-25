@@ -7,11 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Resultat</ion-title>
+    <ion-title>RESULTAT</ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 <ion-content padding>
-{{arrayResult}}
+<resultat-list-partial [itemIncomes]='incomes'> </resultat-list-partial>
 </ion-content>

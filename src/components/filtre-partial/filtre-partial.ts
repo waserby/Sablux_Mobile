@@ -57,11 +57,14 @@ export class FiltrePartialComponent implements OnInit, OnChanges{
         //console.log("Voici les zones : "+this.arrayZone);
       });
     }
-    //MEthode de VALIDATION DU FORMULAIRE
+    //Methode de VALIDATION DU FORMULAIRE
     sendInputs(valeur) {
-      console.log(this.inputs);
-      this.navCtrl.setRoot(ResultatRecherchePage, valeur);
+      //console.log(this.inputs);
+      //this.navCtrl.setRoot(ResultatRecherchePage, valeur);
+      this.navCtrl.push('page-resultat-recherche', valeur);//J'envoi la valeur à travers un navCTRL
     }
+
+
 
 
     // //For Search terms
