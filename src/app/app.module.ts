@@ -26,6 +26,10 @@ import { ContactPage } from '../pages/contact/contact';
 //Native
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { EmailComposer } from '@ionic-native/email-composer';
+import { CallNumber } from '@ionic-native/call-number';
+import { OneSignal } from '@ionic-native/onesignal';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 @NgModule({
@@ -61,6 +65,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    EmailComposer,
+    CallNumber,
+    OneSignal,
+    LocalNotifications
   ]
 })
 export class AppModule {}

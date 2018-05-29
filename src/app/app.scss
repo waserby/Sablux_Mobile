@@ -21,3 +21,24 @@
 .no-padding {// Pour enlever le padding pour que ca soit full
     padding: 0px !important;
 }
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.text-justif{
+    text-align: justify;
+    line-height: 1.5;
+    font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+.font-sablux{
+    font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 15px; 
+}
+
+.toastcolor{
+    color: #913E98;
+}

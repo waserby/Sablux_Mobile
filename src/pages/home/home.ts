@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, ItemSliding, Item } from 'ionic-angular';
+import { NavController, ItemSliding, Item, AlertController } from 'ionic-angular';
+//Pages
 import { ListeProgrammesPage } from '../liste-programmes/liste-programmes';
 import { TrouverBienPage } from '../trouver-bien/trouver-bien';
+import { ContactPage } from '../contact/contact';
+import { CallNumber } from '@ionic-native/call-number';
 
 
 @Component({
@@ -10,8 +13,9 @@ import { TrouverBienPage } from '../trouver-bien/trouver-bien';
 })
 export class HomePage {
   activeItemSliding: ItemSliding = null;
+  numeroSablux="338694000";
 
-  constructor(public navCtrl: NavController) {
+  constructor(public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
 
   }
 
@@ -25,10 +29,12 @@ export class HomePage {
  
     this.activeItemSliding = itemSlide;
     let swipeAmount;
-    if(test=='grand'){
-      swipeAmount = 257; //set your required swipe amount
-    }else
+    if(test=='biens'){
+      swipeAmount = 259; //set your required swipe amount
+    }else if(test=='contact')
     {
+      swipeAmount = 182;
+    }else{
       swipeAmount = 178;
     }
 
@@ -59,8 +65,31 @@ export class HomePage {
     this.navCtrl.setRoot(ListeProgrammesPage, valeur);
     //{typeDeProgramme: 'rea'}
   }
-//Methode pour ouvrir la map recherche bien
+//Methode pour ouvrir la page recherche bien
   openTrouverBien(valeur: any){ // On recupère le statut (louer/vendre)
     this.navCtrl.setRoot(TrouverBienPage, valeur);
+  }
+//Methode pour ouvrir l
+  openContact(valeur: any){ // On recupère le statut (louer/vendre)
+    this.navCtrl.setRoot(ContactPage, valeur);
+  }
+
+  //Fonction d'appel 
+  openPhone(numero: string) {
+    this.callNumber.callNumber(numero, true)
+      .then(() => console.log('Phone ouvert'))
+      .catch(() => {
+        this.alertMessage('Impossible d\'utiliser le phone' , "L\'application n'a pas réussi à ouvrir le phone");
+      });  
+  }
+
+  //Alerte
+  alertMessage(title, detail) {
+    let alert = this.alertController.create({
+      title: title.toString(),
+      subTitle: detail.toString(),
+      buttons: ['Fermer']
+    });
+    alert.present();
   }
 }

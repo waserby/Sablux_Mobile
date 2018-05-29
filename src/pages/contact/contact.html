@@ -5,15 +5,105 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-    <ion-title>ModalPage</ion-title>
-    <ion-buttons end>
-    <button ion-button (click)="closeModal()">X</button>
-    </ion-buttons>
-
+  <ion-navbar>
+      <button ion-button menuToggle *ngIf="typeContact != 'contactFromproduit'">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title> Contact </ion-title>
+      <ion-buttons end *ngIf="typeContact == 'contactFromproduit'"> <!-- Ne s'affiche que si la page a été ouverte from produit-->
+      <button ion-button (click)="closeModal()">Fermer</button>
+      </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 
-<ion-content padding>
-  {{typeContact}}
+<ion-content >
+
+  <ion-card no-padding>
+    <img src="assets/img/programmes/accueil/contact.jpg"/>
+    <!-- <ion-icon name="search"></ion-icon> -->
+  </ion-card>
+
+  <ion-row margin >
+    <div class="center" >
+      <ion-chip>
+        <ion-icon name="home" color="sablux"></ion-icon>
+        <ion-label class="font-sablux"><b> FORMULAIRE DE CONTACT</b></ion-label>
+      </ion-chip>
+    </div>
+  </ion-row>
+
+  <form (ngSubmit)="sendEntries(entre)">
+    <ion-list>
+ 
+      <ion-item>
+        <ion-label>Prénom</ion-label>
+        <ion-input required type="text" name="entre_prenom" [(ngModel)]="entre.prenom"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label>Nom</ion-label>
+        <ion-input required type="text" name="entre_nom" [(ngModel)]="entre.nom"></ion-input>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label>Téléphone</ion-label>
+        <ion-input required type="tel" name="entre_telephone" [(ngModel)]="entre.telephone"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Mail</ion-label>
+        <ion-input required type="email" name="entre_mail" [(ngModel)]="entre.mail"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <!-- Type Contact -->
+    <ion-list >
+
+      <ion-list-header>
+        <b>Comment voulez vous être re-contacter??</b> 
+      </ion-list-header>
+  
+      <ion-item>
+        <ion-label>Mode de contact</ion-label>
+        <ion-select name="entre_modeContact" [(ngModel)]="entre.modeContact" placeholder="Mail">
+          <ion-option value="telephone"> Par Téléphone </ion-option>
+          <ion-option value="mail"> Par Mail </ion-option>
+        </ion-select>
+      </ion-item>
+    
+    </ion-list>
+
+    <!-- Message -->
+    <ion-list >
+
+      <ion-list-header>
+        <b>Votre message pour Sablux</b> 
+      </ion-list-header>
+  
+      <ion-item>
+        <textarea required #myInput name="entre_message" id="myInput" rows="3" maxLength="500" (keyup)="resize()" [(ngModel)]="entre.message"></textarea>
+        <!-- <ion-textarea name="entre_message" placeholder="Entrer votre message pour Sablux" [(ngModel)]="entre.message"></ion-textarea> -->
+      </ion-item>
+    
+    </ion-list>
+
+    <button ion-button color="sablux" type="submit" full icon-left large> 
+      <p margin-right>ENVOYER</p> 
+      <ion-icon name="send"></ion-icon>
+    </button>
+  </form>
 </ion-content>
+
+
+<!-- <ion-navbar>
+      <ion-title> Contact </ion-title>
+      <ion-buttons end>
+      <button ion-button (click)="closeModal()">Fermer</button>
+      </ion-buttons>
+  </ion-navbar> -->
+
+
+
+    
+  

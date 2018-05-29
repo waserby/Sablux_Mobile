@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController } from 'ionic-angular';
+import { Nav, Platform, LoadingController, NavController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
+import { OneSignal } from '@ionic-native/onesignal';
 
 //Pages
 import { HomePage } from '../pages/home/home';
@@ -23,7 +24,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor (public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
+  constructor (private oneSignal : OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
     this.initializeApp();
 
     // LA LISTE DES PAGES used for an example of ngFor and navigation
@@ -35,6 +36,22 @@ export class MyApp {
       { title: 'Nous contacter', component: ContactPage }
 
     ];
+
+    //ONESGINAL pour Notifications à distance
+      this.oneSignal.startInit('3a0b8b5b-9ef2-431f-bb19-046403dea55c', '549400626727'); //First: APP id oneSignal Second: Identifiant de l'expediteur
+
+      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert);
+
+      this.oneSignal.handleNotificationReceived().subscribe(() => {
+      // do something when notification is received
+      });
+
+      this.oneSignal.handleNotificationOpened().subscribe(() => {
+        // do something when a notification is opened
+        this.nav.setRoot(ListeProgrammesPage);
+      });
+
+      this.oneSignal.endInit();
 
   }// FIN CONSTRUCTEUR
 

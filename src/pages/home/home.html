@@ -14,7 +14,7 @@
           <ion-col col-12 no-padding>
             <ion-list no-margin>
               <ion-item-sliding no-margin no-padding #slidingItem1 >
-                <ion-item no-margin no-padding #item1 (click)="openOption(slidingItem1, item1,'grand')">
+                <ion-item no-margin no-padding #item1 (click)="openOption(slidingItem1, item1,'biens')">
                   <ion-card no-padding >
                     <img no-padding src="assets/img/programmes/accueil/programmes.jpg"/>
                     <div class="card-title"><ion-icon name="home"></ion-icon> Nos programmes immobiliers</div>
@@ -68,18 +68,41 @@
           <ion-col col-12 no-padding>
             <ion-card no-padding>
               <img no-padding src="assets/img/programmes/accueil/espace.jpg"/>
-              <div class="card-title">Acceder à votre espace membre</div>
+              <div class="card-title">Accéder à votre espace membre</div>
             </ion-card>
           </ion-col>
+        </ion-row> <!-- END ROW:3 -->
 
+        <ion-row no-padding> <!-- ROW4:   Contact-->
           <ion-col col-12 no-padding>
-            <ion-card no-padding>
-              <img no-padding src="assets/img/programmes/accueil/contact.jpg"/>
-              <div class="card-title">Contactez-Nous</div>
-            </ion-card>
+            <ion-list no-margin>
+              <ion-item-sliding no-margin no-padding #slidingItem4>  <!-- On recupère le ion-item-sliding pour slider quand on clique-->
+                <ion-item no-margin no-padding #item4 (click)="openOption(slidingItem4, item4, 'contact')">
+                  <ion-card no-padding>
+                    <img no-padding src="assets/img/programmes/accueil/contact.jpg"/>
+                    <div class="card-title"> Contacter nous</div>
+                  </ion-card>
+                </ion-item>
+                <ion-item-options>
+                  <button ion-button color="light" icon-start (click)="openContact()">
+                    <ion-icon name="contacts"></ion-icon>
+                    Contacter
+                  </button>
+                  <button class="slidebutton" ion-button icon-start (click)="openPhone(numeroSablux)">
+                    <ion-icon name="call"></ion-icon>
+                    Appeler
+                  </button>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
           </ion-col>
         </ion-row> <!-- END ROW:3 -->
 
     </ion-grid>
 </ion-content>
 
+
+<!-- <ion-card no-padding>
+              <img no-padding src="assets/img/programmes/accueil/espace.jpg"/>
+              <div class="card-title">Acceder à votre espace membre</div>
+            </ion-card> -->

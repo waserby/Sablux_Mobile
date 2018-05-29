@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { ProgsProviderFireApi } from '../../providers/progs/progs';
-import { ViewController } from 'ionic-angular';
+import { ViewController, AlertController } from 'ionic-angular';
 
 // For Modal
 import { ModalController } from 'ionic-angular';
+import { CallNumber } from '@ionic-native/call-number';
 
 /**
  * Generated class for the ResultatListPartialComponent component.
@@ -21,28 +22,41 @@ export class ResultatListPartialComponent implements OnInit {
   tabProduits: any;//Tableau de programme LOCAL: string;
   arrayResult: any[]=[]; //Tableau des resultats à afficher après filtre selon CRITERES
   urlProduits: string;
-
+  numeroSablux="338694000"; //Numéro SABLUX
 
   //METHODES LIFECYCLE
-  constructor( private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
+  constructor(public alertController: AlertController, public callNumber: CallNumber, private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
   ngOnInit(): void {
     this.urlProduits='http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
-    this.restGetProduits(); 
+    this.restGetProduits();
     console.log(this.itemIncomes);
   }
 
   //METHODES LOGIQUE METIERS
   //Methodes boutons
   public openContacter(){
-    var data = { typeContact : 'produit' };
+    var data = { typeContact : 'contactFromproduit' };
     var modalPage = this.modalCtrl.create('page-contact', data); 
     modalPage.present(); 
   }
-  public openAppeler(){
-    
+  public openAppeler(numero : string){
+    this.callNumber.callNumber(numero, true)
+      .then(() => console.log('Phone ouvert'))
+      .catch(() => {
+        this.alertMessage('Impossible d\'utiliser le phone' , "L\'application n'a pas réussi à ouvrir le phone");
+      });  
+  }
+
+  //Alerte
+  alertMessage(title, detail) {
+    let alert = this.alertController.create({
+      title: title.toString(),
+      subTitle: detail.toString(),
+      buttons: ['Fermer']
+    });
+    alert.present();
   }
   
-
   //For Api REST
   restGetProduits() {
     this.progsServiceFireApi.restGet(this.urlProduits).then(data => {

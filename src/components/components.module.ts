@@ -13,6 +13,9 @@ import { Network } from '@ionic-native/network';
 import { FiltrePartialComponent } from './filtre-partial/filtre-partial';
 import { ResultatListPartialComponent } from './resultat-list-partial/resultat-list-partial';
 import { ResultatMapPartialComponent } from './resultat-map-partial/resultat-map-partial';
+import { EmailComposer } from '@ionic-native/email-composer';
+import { CallNumber } from '@ionic-native/call-number';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 @NgModule({
 	declarations: [ProgrammesPartialComponent,
@@ -30,7 +33,10 @@ import { ResultatMapPartialComponent } from './resultat-map-partial/resultat-map
 		ProgsProviderFireApi,
 		ProgsService,
 		GoogleMaps,
-		Network
+		Network,
+		EmailComposer,
+		CallNumber,
+		LocalNotifications
 	  ]
 })
 export class ComponentsModule {}
