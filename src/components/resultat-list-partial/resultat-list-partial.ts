@@ -63,12 +63,12 @@ export class ResultatListPartialComponent implements OnInit {
       this.tabProduits = data;
 
       //---------------------------------FILTRAAAGE---------------------------------
-      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 100))
+      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0))
       {
         //Cas ALL none
         this.arrayResult = this.tabProduits;
       
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 100) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 100)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 100)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 100)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0)) ) {
         //Cas ou une seule valeur est donnée (que ce soit zone, type ou prix)
         for (let item of this.tabProduits) {
           if((item.zone == this.itemIncomes.zone) || (item.typeproduit == this.itemIncomes.type) || (item.price <= this.itemIncomes.prix)) {
@@ -78,7 +78,7 @@ export class ResultatListPartialComponent implements OnInit {
             console.log('Cas 1: item don\'t match '+item.zone+'  Type produit  '+item.typeproduit+' PRIX  '+item.price)          }
         }
 
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 100) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 100)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix != 100)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix != 0)) ) {
         //Cas ou 2 critères sont données 
         for (let item of this.tabProduits) {
           if(((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type)) || ((item.zone == this.itemIncomes.zone) && (item.price <= this.itemIncomes.prix)) || ((item.typeproduit == this.itemIncomes.type) && (item.price <= this.itemIncomes.prix))  ){      

@@ -48,7 +48,7 @@ export class MyApp {
 
       this.oneSignal.handleNotificationOpened().subscribe(() => {
         // do something when a notification is opened
-        this.nav.setRoot(ListeProgrammesPage);
+        this.nav.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
       });
 
       this.oneSignal.endInit();
