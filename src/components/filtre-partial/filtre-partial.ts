@@ -51,7 +51,7 @@ export class FiltrePartialComponent implements OnInit {
             text: 'Voir',
             handler: () => {
               //TODO quand on clique une notif
-              this.sendInputs({datafiltre: {zone: notification.zone, type: notification.typeproduit, prix: notification.price}});          // this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
+              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});          // this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
             }
           }]
         });
