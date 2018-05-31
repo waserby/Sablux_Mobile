@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
 import { ProgrammeModel } from '../../models/programme-model';
 
 import { ProgsService } from '../../providers/services/progs.service';
@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
 export class DetailProgrammePage {
   chooseprog: ProgrammeModel;
 
-  constructor(private progsServiceFireApi: ProgsProviderFireApi , public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private progservice: ProgsService) {
+  constructor(public modalCtrl : ModalController, private progsServiceFireApi: ProgsProviderFireApi , public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, private progservice: ProgsService) {
     // console.log(this.chooseprog.tabUrlImg[0]);
   }
   dismiss() {
@@ -34,6 +34,12 @@ export class DetailProgrammePage {
     console.log('ionViewDidLoad DetailProgrammePage');
   }
 
+
+  public openContacter() {
+    var data = { typeContact : 'contactFromProgramme' };
+    var modalPage = this.modalCtrl.create('page-contact', data); 
+    modalPage.present(); 
+  }
 }
 
 

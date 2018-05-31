@@ -1,11 +1,17 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { ProgsProviderFireApi } from '../../providers/progs/progs';
-import { ViewController, AlertController } from 'ionic-angular';
+import { ViewController, AlertController, LoadingController, NavController } from 'ionic-angular';
+
+//Page
+import { HomePage } from '../../pages/home/home';
 
 // For Modal
 import { ModalController } from 'ionic-angular';
+
+//Native
 import { CallNumber } from '@ionic-native/call-number';
+import { Network } from '@ionic-native/network';
 
 /**
  * Generated class for the ResultatListPartialComponent component.
@@ -23,23 +29,45 @@ export class ResultatListPartialComponent implements OnInit {
   arrayResult: any[]=[]; //Tableau des resultats à afficher après filtre selon CRITERES
   urlProduits: string;
   numeroSablux="338694000"; //Numéro SABLUX
+  loader: any; //Loader
 
-  //METHODES LIFECYCLE
-  constructor(public alertController: AlertController, public callNumber: CallNumber, private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
+  //--------------------------------------------------METHODES LIFECYCLE----------------------------------------
+  constructor(public navCtrl: NavController, private alertCtrl: AlertController, public loadingCtrl: LoadingController, private network: Network, public alertController: AlertController, public callNumber: CallNumber, private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
+  
   ngOnInit(): void {
+    
     this.urlProduits='http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
-    this.restGetProduits();
     console.log(this.itemIncomes);
+    //Si le phone est déconnecté
+    if(this.isOnline()) { 
+      //ToDO: Si le phone est online
+      this.presentLoading();//Affiche le loading
+      this.restGetProduits();
+    } else {
+      let alertDecon = this.alertCtrl.create({
+        title: "Déconnecté !!",
+        subTitle: "Veuillez vous connecter pour accéder aux services",
+        buttons: [{
+          text: 'Retour',
+          handler: () => {
+            //TODO quand on clique une notif LOCAL
+            this.navCtrl.setRoot(HomePage);
+          }
+        }]
+      });
+      alertDecon.present();
+    }
+  
   }
 
-  //METHODES LOGIQUE METIERS
+  //------------------------------------METHODES LOGIQUE METIERS----------------------------------------------
   //Methodes boutons
-  public openContacter(){
+  public openContacter() {
     var data = { typeContact : 'contactFromproduit' };
     var modalPage = this.modalCtrl.create('page-contact', data); 
     modalPage.present(); 
   }
-  public openAppeler(numero : string){
+  public openAppeler(numero : string) {
     this.callNumber.callNumber(numero, true)
       .then(() => console.log('Phone ouvert'))
       .catch(() => {
@@ -104,9 +132,29 @@ export class ResultatListPartialComponent implements OnInit {
       }
       //------------------------FINNNN---------FILTRAAAGE---------------------------------
 
+      this.loader.dismiss();// On fait disparaitre le loader
       console.log("Voici le tableau : "+this.arrayResult);
     });//Fin traitement after reception données api REST
   }
+
+  //Methodes pour tester la connection waserbywork
+    //Method that returns true if the user is connected to internet
+    private isOnline(): boolean {
+      return this.network.type.toLowerCase() !== 'none';
+    }
+  // Method that returns true if the user is not connected to internet
+    private isOffline(): boolean {
+      return this.network.type.toLowerCase() === 'none';
+    }
+
+  //--------------Loader Methode--------------
+    //Le loading pendant que ca charge
+    presentLoading() {
+      this.loader = this.loadingCtrl.create({
+        content: "Chargement..."
+      });
+      this.loader.present();
+    }
 
 }
 

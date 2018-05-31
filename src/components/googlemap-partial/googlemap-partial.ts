@@ -28,18 +28,12 @@ export class GooglemapPartialComponent {
   //Pour la map
   map: GoogleMap;
   // //Initialisation des Programmes
-  // progs: ProgrammeModel[];//Tableau de programme LOCAL
-  // chooseprog: ProgrammeModel;
+ 
 
 
   //-----------------Constructeur et Methodes LIFECYCLE-------------------------------
   constructor(public platform: Platform, private progservice: ProgsService, public navParams: NavParams) {}
 
-  // ngOnInit(){
-  //   this.getProgs();//Je récupère la liste des programmes pour chercher dedans celui correspondant au id recu from la page listes des programmes
-  //   this.chooseprog = this.progs[this.navParams.get('itemid')];//Je recupère le programme correspondant à l'id itemid
-  //   console.log(this.chooseprog.id);
-  // }
   ngOnInit(): void {
     // this.latitude = this.progForMap.latitude;
     // this.longitude = this.progForMap.longitude;
@@ -53,9 +47,6 @@ export class GooglemapPartialComponent {
     });
   }
 
-  ionViewDidEnter() {
-   
-  }
   //FINNNN--------------Constructeur et Methodes LIFECYCLE-------------------------------
 
 
@@ -85,7 +76,7 @@ export class GooglemapPartialComponent {
         this.map.addMarker({
           // title: this.chooseprog.nom.toString(), //custom
           title: this.marker_title.toString(), //custom
-          icon: 'green',
+          icon: 'sablux',
           animation: 'DROP',
           position: {
             lat: this.progForMap.latitude,
@@ -101,12 +92,8 @@ export class GooglemapPartialComponent {
 
      });
   }
+  
 
-  //Methodes pour le PROGRAMME
-  // getProgs(): void {//Methode qui recupère les programmes grace à la méthode créee dans le service.
-  //   this.progservice.getProgs().subscribe(progs => this.progs = progs);
-  // }
-
-  //FINNNN-----------------Methodes Appelée (Traitement)-------------------------------
+  //FINNNN-----------------Methodes Appelées (Traitement)-------------------------------
 
 }

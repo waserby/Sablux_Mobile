@@ -16,14 +16,13 @@
 
       <ion-item>
         <ion-label>Zone</ion-label>
-        <ion-select name="input_zone" [(ngModel)]="inputs.zone" placeholder="Autour de Moi">
+        <ion-select name="input_zone" [(ngModel)]="inputs.zone" placeholder="Sans ce critère">
           <ion-option value="none">
             Sans ce critère
           </ion-option>
-
-          <ion-option value="aroundme">
+          <!-- <ion-option value="aroundme">
             Autour de moi
-          </ion-option>
+          </ion-option> -->
           <div *ngFor="let yeuf of arrayZone">
             <ion-option value="{{yeuf}}">
               {{yeuf}}
@@ -84,7 +83,7 @@
         <ion-option value="2">2ème étage</ion-option>
         <ion-option value="3">3ème étage</ion-option>
         <ion-option value="4">4ème étage</ion-option>
-        <ion-option value="5">5ème étage</ion-option>
+        <ion-option value="5">5ème étage     </ion-option>
       </ion-select>
     </ion-item>
   </ion-list> -->
@@ -94,7 +93,7 @@
   {{inputs.prix}}
   {{inputs.etage}} -->
 
-  <button ion-button color="sablux" type="submit" full icon-left large> 
+  <button ion-button color="sablux" type="submit" full icon-left large [disabled]="!boutonRechercherOn" ng-class="{classButtonOff: !boutonRechercherOn}"> 
     <ion-icon name="home"></ion-icon>
     RECHERCHER 
   </button>
@@ -109,122 +108,3 @@
             {{item.zone}}
         </ion-item>
     </ion-list> -->
-
-
-
-
-    <!-- <ion-list-header>
-      <b>Entrez la zone de recherche</b> 
-    </ion-list-header>
-  
-    <ion-item>
-      <ion-label fixed>Zone</ion-label>
-      <ion-input name="input_zone" type="text"></ion-input>
-    </ion-item> -->
-    
-
-
-<!-- <ion-grid no-padding>
-
-  <ion-row radio-group [(ngModel)]="type">
-
-    <ion-col>
-      <ion-item>
-        Type
-      </ion-item>
-    </ion-col>
-
-    <ion-col>
-      <ion-item>
-        <ion-label>Villa</ion-label>
-        <ion-radio no-padding value="villa"></ion-radio>
-      </ion-item>
-    </ion-col>
-
-    <ion-col>
-      <ion-item>
-        <ion-label>F1</ion-label>
-        <ion-radio no-padding value="F1"></ion-radio>
-      </ion-item>
-    </ion-col>
-
-    <ion-col>
-      <ion-item>
-       <ion-label>F2</ion-label>
-        <ion-radio no-padding value="F2"></ion-radio>
-      </ion-item>
-    </ion-col>
-    
-    <ion-col>
-      <ion-item>
-       <ion-label>F3</ion-label>
-        <ion-radio no-padding value="F3"></ion-radio>
-      </ion-item>
-    </ion-col>
-    
-    <ion-col>
-      <ion-item>
-       <ion-label>F4</ion-label>
-        <ion-radio no-padding value="F4"></ion-radio>
-      </ion-item>
-    </ion-col>
-  
-  </ion-row>
-
-</ion-grid> -->
-
-
-
-
-
-<!-- <ion-item>
-  <ion-label>Go</ion-label>
-  <ion-radio value="golang" checked="true"></ion-radio>
-</ion-item>
-
-<div class="button-bar" >         
-    <ion-label>F1</ion-label><ion-radio ng-click="changedRadioValue(item)" style="width:33.5%"></ion-radio>
-    <ion-label>F2</ion-label><ion-radio ng-click="changedRadioValue(item)" style="width:33.5%"></ion-radio>
-</div>  
-
-<ion-list>
-  <ion-item>
-    <ion-label fixed>Username</ion-label>
-    <ion-input type="text"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label fixed>Password</ion-label>
-    <ion-input type="password"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-range [(ngModel)]="brightness">
-      <ion-icon range-left small name="sunny"></ion-icon>
-      <ion-icon range-right name="sunny"></ion-icon>
-    </ion-range>
-  </ion-item>
-</ion-list> -->
-
-
-
-<!-- <ion-item>
-    <ion-label fixed > Villa</ion-label>
-    <ion-radio value="villa"></ion-radio>
-  </ion-item>
-  <ion-item>
-    <ion-label fixed >F1</ion-label>
-    <ion-radio value="F1"></ion-radio>
-  </ion-item>
-  <ion-item>
-    <ion-label fixed >F2</ion-label>
-    <ion-radio value="F2"></ion-radio>
-  </ion-item>
-  <ion-item>
-    <ion-label fixed >F3</ion-label>
-    <ion-radio value="F3"></ion-radio>
-  </ion-item>
-  <ion-item>
-    <ion-label fixed >F4</ion-label>
-    <ion-radio value="F4"></ion-radio>
-  </ion-item> -->

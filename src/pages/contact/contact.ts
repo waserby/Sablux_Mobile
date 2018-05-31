@@ -34,6 +34,8 @@ export class ContactPage implements OnInit{
     this.typeContact = this.navParams.get('typeContact');
     if(this.typeContact=="contactFromproduit"){
       this.entre.message  =`Je souhaiterais avoir plus de renseignement sur ce bien et prendre rendez-vous pour le visiter.\nPourriez-vous me recontacter?`;
+    }else if (this.typeContact=="contactFromProgramme"){
+      this.entre.message  =`je suis interessé par ce programme et je souhaiterais avoir plus de renseignements.\nPourriez-vous me recontacter?`;
     }else{
       this.entre.message  =`Pourriez-vous me recontacter?`;
     }

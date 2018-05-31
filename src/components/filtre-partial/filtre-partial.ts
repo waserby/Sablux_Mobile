@@ -3,12 +3,14 @@ import { ProgsProviderFireApi } from '../../providers/progs/progs';
 import { Produit } from '../../models/produit-model';
 import { ResultatListPartialComponent } from '../resultat-list-partial/resultat-list-partial';
 import { ResultatRecherchePage } from '../../pages/resultat-recherche/resultat-recherche';
-import { NavController, AlertController, Platform } from 'ionic-angular';
+import { NavController, AlertController, Platform, LoadingController } from 'ionic-angular';
 
 //Native
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Storage as Store } from '@ionic/storage';
 import { ListeProgrammesPage } from '../../pages/liste-programmes/liste-programmes';
+import { Network } from '@ionic-native/network';
+import { HomePage } from '../../pages/home/home';
 
 /**
  * Generated class for the FiltrePartialComponent component.
@@ -26,45 +28,80 @@ export class FiltrePartialComponent implements OnInit {
   urlProduits: string;
   arrayZone: string[] = []; //Tableau des zone disponible dans les programmes de l'API
   //NG MODEL des inputs
-  // inputs = {zone: "none", type: "none", prix: 100, etage: "none"};// On initialise pour les default entrie et on recupère en two way databinding
   inputs = { zone: "none", type: "none", prix: 0 };// On initialise pour les default entrie et on recupère en two way databinding
-
-  //searchTerm: string = ''; // Terme entrer par le user dans le champ zone
-  //Pour filtre template
-  text: number = 0;
+  text: number = 0;//Pour filtre template
+  boutonRechercherOn : boolean;
+  loader: any; //Loader
 
   //METHODES LIFECYCLE
-  constructor(private plt: Platform, alertCtrl: AlertController, public storage: Store, private localNotifications: LocalNotifications, public navCtrl: NavController, private progsServiceFireApi: ProgsProviderFireApi) {
-    this.plt.ready().then(() => {
-      //TODO quand on clique une notif
-      this.localNotifications.on('click').subscribe( notification => {
-        //let json = JSON.parse(notification.data);
-        //let produit = json.mydata;//je recupère la data qui est l'item
-        //console.log("Notification Subscribed");
-        //this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
-        //this.sendInputs({datafiltre: {zone: this.inputs.zone, type: this.inputs.type, prix: this.inputs.prix}});          // this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
-        // GOOD this.sendInputs({datafiltre: {zone: produit.zone, type: produit.typeproduit, prix: produit.price}});          // this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
-        let alert = alertCtrl.create({
-          title: notification.title,
-          subTitle: "La zone est :"+notification.data.zone+" et le type: "+notification.data.typeproduit ,
-          buttons: [{
-            text: 'Voir',
-            handler: () => {
-              //TODO quand on clique une notif
-              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});          // this.navCtrl.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
-            }
-          }]
-        });
-        alert.present();
-      })
-    })//PLATFORM READY
+  constructor(public loadingCtrl: LoadingController, private network: Network, private plt: Platform, private alertCtrl: AlertController, public storage: Store, private localNotifications: LocalNotifications, public navCtrl: NavController, private progsServiceFireApi: ProgsProviderFireApi) {
+    // this.plt.ready().then(() => {
+    //   //TODO quand on clique une notif
+    //   this.localNotifications.on('click').subscribe( notification => {
+    //     //Ca lance une alerte avec un bouton menant vers la notification
+    //     let alert = alertCtrl.create({
+    //       title: notification.title,
+    //       subTitle: notification.text,
+    //       buttons: [{
+    //         text: 'Voir',
+    //         handler: () => {
+    //           //TODO quand on clique une notif LOCAL
+    //           this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
+    //         }
+    //       }]
+    //     });
+    //     alert.present();
+    //   })
+    // })//PLATFORM READY
   }// FIN contructeur
 
   ngOnInit(): void {
-    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
-    this.restGetProduits();
-    //console.log(this.tabProduits.length());
-
+    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';    
+    //Si le phone est déconnecté
+    if(this.isOnline()) { 
+      //ToDO: Si le phone est online
+      this.boutonRechercherOn = true;
+      this.presentLoading();//Affiche le loading
+      this.restGetProduits();
+    } else {
+      this.boutonRechercherOn = false;
+      let alertDecon = this.alertCtrl.create({
+        title: "Déconnecté !!",
+        subTitle: "Veuillez vous connecter pour accéder aux services",
+        buttons: [{
+          text: 'Retour',
+          handler: () => {
+            //TODO quand on clique une notif LOCAL
+            this.navCtrl.setRoot(HomePage);
+          }
+        }]
+      });
+      alertDecon.present();
+    }
+    //CHANGE STATE TO CONNECT
+    this.network.onConnect().subscribe(() => {
+      console.log('network connected!');
+      this.boutonRechercherOn = true;
+      this.presentLoading();//Affiche le loading
+      this.restGetProduits();
+    });
+    //CHANGE STATE TO DISCONNECT
+    this.network.onDisconnect().subscribe(() => {
+      this.boutonRechercherOn = false;// Je grise le bouton
+      console.log('network disconnected!');
+      let alertDecon = this.alertCtrl.create({
+        title: "Déconnecté !!",
+        subTitle: "Veuillez vous connecter pour pouvoir acceder aux services sablux",
+        buttons: [{
+          text: 'Retour',
+          handler: () => {
+            //TODO quand on clique une notificiation LOCAL
+            this.navCtrl.setRoot(HomePage);
+          }
+        }]
+      });
+      alertDecon.present();
+    });
   }
 
   //METHODES LOGIQUE METIER
@@ -86,12 +123,11 @@ export class FiltrePartialComponent implements OnInit {
 
       //Pour les ZONES
       for (let item of this.tabProduits) {
-        //console.log("Un produit :  "+item.zone+"  ID: "+item.id+" de type "+item.typeproduit+" et qui coute "+item.price);
         if ((this.arrayZone.indexOf(item.zone) == -1) && (item.zone !== null) && (item.zone !== "")) { //this.tabProduits.indexOf(item.zone) <= -1 
           this.arrayZone.push(item.zone);
         }
+      this.loader.dismiss();// On fait disparaitre le loader
       }
-      //console.log("Voici les zones : "+this.arrayZone.length);
     });
   }
 
@@ -99,17 +135,17 @@ export class FiltrePartialComponent implements OnInit {
   sendInputs(valeur) {
     this.navCtrl.push('page-resultat-recherche', valeur);//J'envoi la valeur à travers un navCTRL
   }
-
+  //Methode pour NOTIFIER
   notifier(titre: string, text: string, item: any) {
     // Schedule a single notification
     this.localNotifications.schedule({
-      title: "Un nouveau appartement est disponible",
+      title: "Un nouvel appartement est disponible",
       text: text,
       icon: 'assets/img/icon.png',
       data: item
     });
   }
-
+  //METHODE TEST Si il ya un NEW PROGRAMME
   testNewProgramme(nouveauTabProduits) {
     let nbreNewProd;
     this.storage.get('produits').then((result) => {
@@ -137,54 +173,35 @@ export class FiltrePartialComponent implements OnInit {
             let contenuNotif: string = "C'est un " + item.typeproduit + " situé à " + item.zone;
             this.notifier(titreNotif, contenuNotif, item);//On notifie
             console.log(" L'ID de l'item : " + itemNumb + " Son contenu" + item);
-
             //Je set encore la novelle liste de produits pour un prochain test
             this.storage.set('produits', this.tabProduits);// Je STORE le tableau de produits pour les notifications        
           } else {
             console.log("BAD ITEM: L'ID de l'item : " + itemNumb);
           }
         }
-
-        
       } else {
         //Dans ce cas, Aucun produit n'a été ajouté
         console.log("Aucun Produit Ajouté");
       }
     });
-  }
+  }//FIN testProgramme
 
+   //Methodes pour tester la connection waserbywork
+    //Method that returns true if the user is connected to internet
+    private isOnline(): boolean {
+        return this.network.type.toLowerCase() !== 'none';
+    }
+    // Method that returns true if the user is not connected to internet
+    private isOffline(): boolean {
+      return this.network.type.toLowerCase() === 'none';
+    }
+
+  //--------------Loader Methode--------------
+    //Le loading pendant que ca charge
+    presentLoading() {
+      this.loader = this.loadingCtrl.create({
+        content: "Chargement..."
+      });
+      this.loader.present();
+    }
 }
-
-
-
-
-
-            //   this.localNotifications.on("click", (notification, state) => {
-
-            //     let alert = this.alertCtrl.create({
-            //       title: this.todos[this.num].info.nom_du_musee,
-            //       subTitle: this.todos[this.num].info.periode_ouverture+" "+this.todos[this.num].info.adr+"  site web  "+this.todos[this.num].info.sitweb,
-            //       buttons: [
-            //         {
-            //           text: 'OK',
-            //           handler: () => {
-            //             console.log('OK clicked');
-            //           }
-            //         }
-            //       ]
-            //     });
-
-            //   alert.present()
-            // });
-
-
-            // //For Search terms
-  // filterItems(searchTerm){
-  //   return this.tabProduits.filter((item) => {
-  //       return item.zone.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-  //   });    
-  // }
-  // setFilteredItems() {
-  //   this.itemsZone = this.filterItems(this.searchTerm);
-  //   console.log('Tableau filtrer :'+this.itemsZone);
-  // }

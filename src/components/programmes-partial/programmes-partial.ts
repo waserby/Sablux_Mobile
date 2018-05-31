@@ -32,89 +32,71 @@ export class ProgrammesPartialComponent implements OnInit {
       public alertPresentedCon: any;
       public alertPresentedDecon: any;
     //For API REST  
-      // progAPI: any;
-    //From Firebase
-      progsFireBase : any
-    //For Loader of Firebase
-      loader: any;
+      progsFireBase : any //From Firebase
+      loader: any; //For Loader of Firebase
 
   //-------FIN INITIALISATION DES VARIABLES---------------------
 
   //----------------METHODES LifeCycle-------------------
       constructor(private toastCtrl: ToastController, private platform: Platform, public alertCtrl: AlertController, private network: Network, private progsServiceFireApi: ProgsProviderFireApi ,private progservice: ProgsService,public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {}
-      ngOnInit() {
-        this.platform.ready().then(() => {
-          this.presentLoading();
-          this.alertPresentedCon = false;// Variable pour eviter les repetition d'alert de meme type (Connecté ici)
-          this.alertPresentedDecon = false;// Variable pour eviter les repetition d'alert de meme type (DECONNECTE ici)
-          this.getProgs();
-          // if(this.isOnline()) { waserbywork
-          //   //ToDO: Si le user est online
-          //   this.getListProgsFirebase();
-          // } else {
-          //   //ToDO: Si le user est OFFLINE
-          //   this.getProgs();
-          //   this.isAvailable = true;
-          // }
-
-          //CHANGE STATE TO CONNECT
-            let connectSubscription = this.network.onConnect().subscribe(() => {
-              console.log('network connected!');
-              console.log("Avalaible:  "+this.isAvailable);
-              if(!this.isAvailable){ //checking if it is false then dismiss() the no internet alert
-                console.log("If:  "+this.noInternetAlert);
-                this.noInternetAlert.dismiss();
-              }
-              this.isAvailable = true;
-              //L'alerte
-              // this.connectedToInternet = this.alertCtrl.create({
-              //   title:'Connecté :)',
-              //   subTitle: 'Vous êtes de nouveau connecté à Internet. La liste des programmes va être mise à jour.',
-              //   buttons: ['OK']
-              // });
-
-              this.connectedToInternet = this.toastCtrl.create({
-                message: 'De nouveau connecté',
-                duration: 2000,
-                position: 'bottom'
-              });
-              
-              this.presentLoading();//Affiche le loading
+        ngOnInit() {
+          this.platform.ready().then(() => {
+            this.presentLoading();
+            this.getProgs();
+            
+            if(this.isOnline()) { 
+              //ToDO: Si le user est online
               this.getListProgsFirebase();
-              this.connectedToInternet.present();
-            });
-
-          //CHANGE STATE TO DISCONNECT
-            let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-              if(this.isAvailable){// if it is true then dismiss the connected to internet alert
-                this.connectedToInternet.dismiss();
-              }
-              this.isAvailable = false;
-              //L'alerte
-              // this.noInternetAlert = this.alertCtrl.create({
-              //   title:'Deconnecté :/',
-              //   subTitle: 'Vous venez d\'être deconnecté d\'Internet. Les programmes sauvegardés en local seront affichés.',
-              //   buttons: ['OK']
-              // });
-
-              this.noInternetAlert = this.toastCtrl.create({
-                message: 'Deconnecté',
-                duration: 2000,
-                position: 'bottom'
-              });
-              
-              this.presentLoading();//Affiche le loading
+            } else {
+              //ToDO: Si le user est OFFLINE
               this.getProgs();
-              this.noInternetAlert.present();
-            });
+              this.isAvailable = true;
+            }
 
-          //this.ajoutAllProgsToFirebase(); // FIREBASE Insertion de Tous les programmes du mock
-          //this.restGetProgs();
-          if(this.item=='realiser' || this.item=='cours' || this.item=='venir'){
-            this.etatsegment = this.item; // On active la case que le user à cliquer seulement si il a cliquer 1 des 3. Sinon on laisse realiser activer par défaut comme défini avant
-          }
-        });//FIN platform ready
-      }//Fin on init()
+            //CHANGE STATE TO CONNECT
+              let connectSubscription = this.network.onConnect().subscribe(() => {
+                console.log('network connected!');
+                console.log("Avalaible:  "+this.isAvailable);
+                if(!this.isAvailable){ //checking if it is false then dismiss() the no internet alert
+                  console.log("If:  "+this.noInternetAlert);
+                  this.noInternetAlert.dismiss();
+                }
+                this.isAvailable = true;
+                this.connectedToInternet = this.toastCtrl.create({
+                  message: 'De nouveau connecté',
+                  duration: 2000,
+                  position: 'bottom'
+                });
+                
+                this.presentLoading();//Affiche le loading
+                this.getListProgsFirebase();
+                this.connectedToInternet.present();
+              });
+
+            //CHANGE STATE TO DISCONNECT
+              let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+                if(this.isAvailable){// if it is true then dismiss the connected to internet alert
+                  this.connectedToInternet.dismiss();
+                }
+                this.isAvailable = false;
+                this.noInternetAlert = this.toastCtrl.create({
+                  message: 'Deconnecté',
+                  duration: 2000,
+                  position: 'bottom'
+                });
+                
+                this.presentLoading();//Affiche le loading
+                this.getProgs();
+                this.noInternetAlert.present();
+              });
+
+            //this.ajoutAllProgsFirebase(); // FIREBASE Insertion de Tous les programmes du mock
+            //this.restGetProgs();
+            if(this.item=='realiser' || this.item=='cours' || this.item=='venir'){
+              this.etatsegment = this.item; // On active la case que le user à cliquer seulement si il a cliquer 1 des 3. Sinon on laisse realiser activer par défaut comme défini avant
+            }
+          });//FIN platform ready
+        }//Fin on init()
 
   //-----------FIN---METHODES LifeCycle-------------------
 
@@ -137,7 +119,7 @@ export class ProgrammesPartialComponent implements OnInit {
   //---------------------METHODES COMMUNICATION EXTERNES (API et FIREBBASE)---------------------
     //Methode ajout All programmes sur FIREBASE
     ajoutAllProgsFirebase(){
-      for (let item of this.progs) { 
+      for (let item of this.progsFireBase) { 
         this.progsServiceFireApi.addProg(item).then(ref => {
         console.log('Le programme '+item.nom+' a été ajouté à FIREBASE et sa reference est: '+ref);
         })
@@ -166,15 +148,15 @@ export class ProgrammesPartialComponent implements OnInit {
         this.loader.present();
       }
 
-      // //Methodes pour tester la connection waserbywork
-      //   // Method that returns true if the user is connected to internet
-      //   private isOnline(): boolean {
-      //     return this.network.type.toLowerCase() !== 'none';
-      //   }
-      //   // Method that returns true if the user is not connected to internet
-      //   private isOffline(): boolean {
-      //     return this.network.type.toLowerCase() === 'none';
-      //   }
+      //Methodes pour tester la connection waserbywork
+        // Method that returns true if the user is connected to internet
+        private isOnline(): boolean {
+          return this.network.type.toLowerCase() !== 'none';
+        }
+        // Method that returns true if the user is not connected to internet
+        private isOffline(): boolean {
+          return this.network.type.toLowerCase() === 'none';
+        }
 
 }
 
@@ -376,3 +358,17 @@ export class ProgrammesPartialComponent implements OnInit {
       //   alert.present();
       //   return alert;
       // }
+
+      //L'alerte
+              // this.connectedToInternet = this.alertCtrl.create({
+              //   title:'Connecté :)',
+              //   subTitle: 'Vous êtes de nouveau connecté à Internet. La liste des programmes va être mise à jour.',
+              //   buttons: ['OK']
+              // });
+
+      //L'alerte
+        // this.noInternetAlert = this.alertCtrl.create({
+        //   title:'Deconnecté :/',
+        //   subTitle: 'Vous venez d\'être deconnecté d\'Internet. Les programmes sauvegardés en local seront affichés.',
+        //   buttons: ['OK']
+        // });

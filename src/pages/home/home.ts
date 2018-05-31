@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, ItemSliding, Item, AlertController } from 'ionic-angular';
+import { NavController, ItemSliding, Item, AlertController, Platform } from 'ionic-angular';
 //Pages
 import { ListeProgrammesPage } from '../liste-programmes/liste-programmes';
 import { TrouverBienPage } from '../trouver-bien/trouver-bien';
 import { ContactPage } from '../contact/contact';
 import { CallNumber } from '@ionic-native/call-number';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 @Component({
@@ -15,13 +16,31 @@ export class HomePage {
   activeItemSliding: ItemSliding = null;
   numeroSablux="338694000";
 
-  constructor(public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
-
+  constructor(public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
+  //TRAITEMENT quand on clique une notif (Je l'ai mis ici car c'est la page qui est lancer en première)
+    this.platform.ready().then(() => {
+      //TODO quand on clique une notif
+      this.localNotifications.on('click').subscribe( notification => {
+        //Ca lance une alerte avec un bouton menant vers la notification
+        let alert = alertCtrl.create({
+          title: notification.title,
+          subTitle: notification.text,
+          buttons: [{
+            text: 'Voir',
+            handler: () => {
+              //TODO quand on clique une notif LOCAL
+              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
+            }
+          }]
+        });
+        alert.present();
+      })
+    })//PLATFORM READY
   }
 
 
   //----------Methode pour que le itemsliding fasse le move de slide quand on clique dessus----------
-  public openOption(itemSlide: ItemSliding, item: Item, test:String) {
+  public openOption(itemSlide: ItemSliding, item: Item, test: String) {
     console.log('opening item slide..');
     
     if(this.activeItemSliding!==null) //use this if only one active sliding item allowed
@@ -35,7 +54,7 @@ export class HomePage {
     {
       swipeAmount = 182;
     }else{
-      swipeAmount = 178;
+      swipeAmount = 176;
     }
 
     itemSlide._setOpenAmount(swipeAmount, false) ;
@@ -91,5 +110,10 @@ export class HomePage {
       buttons: ['Fermer']
     });
     alert.present();
+  }
+
+  //Methode de VALIDATION DU FORMULAIRE
+  sendInputs(valeur) {
+    this.navCtrl.push('page-resultat-recherche', valeur);//J'envoi la valeur à travers un navCTRL
   }
 }

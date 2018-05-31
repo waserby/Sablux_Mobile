@@ -30,7 +30,7 @@
           <ion-row>
             <div class="center">
               <ion-chip>
-                <ion-icon name="home" color="dark"></ion-icon>
+                <ion-icon name="home" color="sablux"></ion-icon>
                 <ion-label>{{chooseprog.nom}}</ion-label>
               </ion-chip>
             </div>
@@ -46,5 +46,9 @@
       
       <!-- <googlemap-partial></googlemap-partial> -->
       <googlemap-partial [progForMap]="chooseprog"></googlemap-partial>
-      Design By TechnoSmart 2018
+
+      <button ion-button color="sablux" type="submit" full icon-left large (click)="openContacter()"> 
+      <ion-icon name="happy"></ion-icon>
+      <p margin-right>Je suis interessé </p> 
+      </button>
   </ion-content>

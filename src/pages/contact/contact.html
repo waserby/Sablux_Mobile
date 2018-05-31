@@ -6,11 +6,11 @@
 -->
 <ion-header>
   <ion-navbar>
-      <button ion-button menuToggle *ngIf="typeContact != 'contactFromproduit'">
+      <button ion-button menuToggle *ngIf="typeContact != 'contactFromproduit' || typeContact != 'contactFromProgramme'">
         <ion-icon name="menu"></ion-icon>
       </button>
       <ion-title> Contact </ion-title>
-      <ion-buttons end *ngIf="typeContact == 'contactFromproduit'"> <!-- Ne s'affiche que si la page a été ouverte from produit-->
+      <ion-buttons end *ngIf="typeContact == 'contactFromproduit' || typeContact == 'contactFromProgramme'"> <!-- Ne s'affiche que si la page a été ouverte from produit-->
       <button ion-button (click)="closeModal()">Fermer</button>
       </ion-buttons>
     </ion-navbar>
