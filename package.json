@@ -79,9 +79,9 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-email-composer": {},
       "mx.ferreyra.callnumber": {},
-      "onesignal-cordova-plugin": {},
       "cordova-plugin-local-notification": {},
-      "cordova-plugin-inappbrowser": {}
+      "cordova-plugin-inappbrowser": {},
+      "onesignal-cordova-plugin": {}
     },
     "platforms": [
       "android"

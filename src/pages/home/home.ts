@@ -6,7 +6,9 @@ import { TrouverBienPage } from '../trouver-bien/trouver-bien';
 import { ContactPage } from '../contact/contact';
 import { CallNumber } from '@ionic-native/call-number';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-
+import { CordovaOptions } from '@ionic-native/core';
+import { global } from '../../mocks/global';// VARIABLE GLOBALE
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-home',
@@ -14,13 +16,19 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 })
 export class HomePage {
   activeItemSliding: ItemSliding = null;
-  numeroSablux="338694000";
+  numeroSablux ="338694000";
+  event : Subscription;
 
   constructor(public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
   //TRAITEMENT quand on clique une notif (Je l'ai mis ici car c'est la page qui est lancer en première)
     this.platform.ready().then(() => {
+      //J'ai une variable globale que je met à true quand je notifie (Dans la page Filtre-partial )
+      //if(global.skipLocalNotificationReady = true){// Si j'ai notifier alors 
+        //this.localNotifications.fireQueuedEvents();//J'execute manuellement les events de locals notifs (dans mon cas c'et le onclick)
+       // global.skipLocalNotificationReady = false;
+      //}
       //TODO quand on clique une notif
-      this.localNotifications.on('click').subscribe( notification => {
+      let event = this.localNotifications.on('click').subscribe( notification => {
         //Ca lance une alerte avec un bouton menant vers la notification
         let alert = alertCtrl.create({
           title: notification.title,
@@ -38,6 +46,16 @@ export class HomePage {
     })//PLATFORM READY
   }
 
+  ionViewWillLeave(){
+    // this.eventConnect.unsubscribe();
+    console.log('ionViewWillLeave HOME byeee');
+
+  }
+
+  ionViewDidLeave(){
+    //this.event.unsubscribe();
+    console.log('ionViewDidLeave HOME byeee');
+  }
 
   //----------Methode pour que le itemsliding fasse le move de slide quand on clique dessus----------
   public openOption(itemSlide: ItemSliding, item: Item, test: String) {
@@ -52,7 +70,7 @@ export class HomePage {
       swipeAmount = 259; //set your required swipe amount
     }else if(test=='contact')
     {
-      swipeAmount = 182;
+      swipeAmount = 184;
     }else{
       swipeAmount = 176;
     }
@@ -81,16 +99,16 @@ export class HomePage {
 
 //Methode pour ouvrir les programmes réalisés, en cours ou a venir selon le bouton clicquer
   openListeProgrammes(valeur: any){ // On recupère le type de programme et on envoi à la page concernée
-    this.navCtrl.setRoot(ListeProgrammesPage, valeur);
+    this.navCtrl.push(ListeProgrammesPage, valeur);
     //{typeDeProgramme: 'rea'}
   }
 //Methode pour ouvrir la page recherche bien
   openTrouverBien(valeur: any){ // On recupère le statut (louer/vendre)
-    this.navCtrl.setRoot(TrouverBienPage, valeur);
+    this.navCtrl.push(TrouverBienPage, valeur);
   }
 //Methode pour ouvrir l
   openContact(valeur: any){ // On recupère le statut (louer/vendre)
-    this.navCtrl.setRoot(ContactPage, valeur);
+    this.navCtrl.push(ContactPage, valeur);
   }
 
   //Fonction d'appel 

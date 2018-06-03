@@ -48,7 +48,7 @@ export class ResultatListPartialComponent implements OnInit {
         title: "Déconnecté !!",
         subTitle: "Veuillez vous connecter pour accéder aux services",
         buttons: [{
-          text: 'Retour',
+          text: 'Retour à l\'accueil',
           handler: () => {
             //TODO quand on clique une notif LOCAL
             this.navCtrl.setRoot(HomePage);
@@ -154,6 +154,22 @@ export class ResultatListPartialComponent implements OnInit {
         content: "Chargement..."
       });
       this.loader.present();
+
+      setTimeout(() => {
+        this.loader.dismiss();
+        let alertDecon = this.alertCtrl.create({
+          title: "Vous n'êtes pas connecté à Internet!",
+          subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
+          buttons: [{
+            text: 'Retour',
+            handler: () => {
+              //TODO quand on clique une notif LOCAL
+              this.navCtrl.setRoot(HomePage);
+            }
+          }]
+        });
+        alertDecon.present();
+      }, 12000);
     }
 
 }

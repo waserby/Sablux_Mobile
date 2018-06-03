@@ -19,7 +19,7 @@ import { ContactPage } from '../pages/contact/contact';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;// Page principale
+  rootPage: any = HomePage; // Page principale
   loader: any;
 
   pages: Array<{title: string, component: any}>;
@@ -29,8 +29,8 @@ export class MyApp {
 
     // LA LISTE DES PAGES used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Accueil', component: HomePage },
-      // { title: 'Liste', component: ListPage },
+      { title: 'Accueil', component: HomePage }, // Pas de HomePage car ca crée des repetitions sur les alertes lancées
+      //{ title: 'Liste', component: ListPage },
       { title: 'Nos programmes', component: ListeProgrammesPage },
       { title: 'Trouver un bien', component: TrouverBienPage },
       { title: 'Nous contacter', component: ContactPage }
@@ -48,7 +48,7 @@ export class MyApp {
 
       this.oneSignal.handleNotificationOpened().subscribe(() => {
         // do something when a notification is opened
-        this.nav.setRoot(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
+        this.nav.push(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
       });
 
       this.oneSignal.endInit();
@@ -98,9 +98,8 @@ export class MyApp {
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+    //Ouvrir une page
+    this.nav.push(page.component); // Pas de set root car ca amène des actions repetitives
   }
 
 }

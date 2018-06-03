@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { FiltrePartialComponent } from '../../components/filtre-partial/filtre-partial';
 
 /**
  * Generated class for the TrouverBienPage page.
@@ -14,6 +15,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'trouver-bien.html',
 })
 export class TrouverBienPage implements OnInit{
+  @ViewChild(FiltrePartialComponent) childFiltre: FiltrePartialComponent;
   statut: String;
 
   //METHODES LIFECYCLE
@@ -27,6 +29,17 @@ export class TrouverBienPage implements OnInit{
     ionViewDidLoad() {
       console.log('ionViewDidLoad TrouverBienPage');
     }
+
+    ionViewWillLeave(){
+      //En quittant l a page je unsunscribe les subscribes effectué
+      // this.eventConnect.unsubscribe();
+      console.log('ionViewWillLeave TrouverBienPage byeee');
+      this.childFiltre.eventConnect.unsubscribe();
+      console.log("UNSUBSCRIBE DONE FOR CONNECT");
+      this.childFiltre.eventDisconnect.unsubscribe();
+      console.log("UNSUBSCRIBE DONE FOR DISCONNECT");
+    }
+  
   //METHODES LOGIQUE METIER
 
 }

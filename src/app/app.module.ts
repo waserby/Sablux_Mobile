@@ -30,6 +30,7 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { CallNumber } from '@ionic-native/call-number';
 import { OneSignal } from '@ionic-native/onesignal';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { AlertOnce } from '../providers/stop-mult-alert/stop-mult-alert';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
     EmailComposer,
     CallNumber,
     OneSignal,
-    LocalNotifications
+    LocalNotifications,
+    AlertOnce
   ]
 })
 export class AppModule {}

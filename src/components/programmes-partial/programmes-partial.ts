@@ -10,8 +10,8 @@ import { Network } from '@ionic-native/network';
 
 // //For Modal
 // import { ModalController } from 'ionic-angular';
-import { NavController, NavParams, LoadingController, AlertController, Platform, Alert, ToastController } from 'ionic-angular';// Pour naviguer et loading
-import { Observable } from 'rxjs';
+import { NavController, NavParams, LoadingController, AlertController, Platform, Alert, ToastController, ViewController } from 'ionic-angular';// Pour naviguer et loading
+import { Observable, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -29,32 +29,34 @@ export class ProgrammesPartialComponent implements OnInit {
       isAvailable: Boolean; //boolean variable helps to find which alert we should dissmiss   
       connectedToInternet; //made global to get access 
       noInternetAlert; // made global to get access 
-      public alertPresentedCon: any;
-      public alertPresentedDecon: any;
     //For API REST  
       progsFireBase : any //From Firebase
       loader: any; //For Loader of Firebase
+    //EVENTS SUBCRIBE
+      eventConnectSubscription : Subscription;
+      eventDisconnectSubscription : Subscription;
+      eventGetProgs : Subscription;
+      eventGetProgsFirebase : Subscription;
 
   //-------FIN INITIALISATION DES VARIABLES---------------------
 
   //----------------METHODES LifeCycle-------------------
-      constructor(private toastCtrl: ToastController, private platform: Platform, public alertCtrl: AlertController, private network: Network, private progsServiceFireApi: ProgsProviderFireApi ,private progservice: ProgsService,public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {}
+      constructor(public viewCtrl: ViewController, private toastCtrl: ToastController, private platform: Platform, public alertCtrl: AlertController, private network: Network, private progsServiceFireApi: ProgsProviderFireApi ,private progservice: ProgsService,public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {}
         ngOnInit() {
           this.platform.ready().then(() => {
             this.presentLoading();
-            this.getProgs();
             
             if(this.isOnline()) { 
               //ToDO: Si le user est online
               this.getListProgsFirebase();
             } else {
               //ToDO: Si le user est OFFLINE
-              this.getProgs();
               this.isAvailable = true;
+              this.getProgs();
             }
 
             //CHANGE STATE TO CONNECT
-              let connectSubscription = this.network.onConnect().subscribe(() => {
+              this.eventConnectSubscription = this.network.onConnect().subscribe(() => {
                 console.log('network connected!');
                 console.log("Avalaible:  "+this.isAvailable);
                 if(!this.isAvailable){ //checking if it is false then dismiss() the no internet alert
@@ -74,8 +76,8 @@ export class ProgrammesPartialComponent implements OnInit {
               });
 
             //CHANGE STATE TO DISCONNECT
-              let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-                if(this.isAvailable){// if it is true then dismiss the connected to internet alert
+              this.eventDisconnectSubscription = this.network.onDisconnect().subscribe(() => {
+                if(this.isAvailable){// if it is true then dismiss the connected to internet alert darlaime@yahoo.fr
                   this.connectedToInternet.dismiss();
                 }
                 this.isAvailable = false;
@@ -83,7 +85,7 @@ export class ProgrammesPartialComponent implements OnInit {
                   message: 'Deconnecté',
                   duration: 2000,
                   position: 'bottom'
-                });
+                 });
                 
                 this.presentLoading();//Affiche le loading
                 this.getProgs();
@@ -103,7 +105,7 @@ export class ProgrammesPartialComponent implements OnInit {
   
   //----------------METHODES Communication interne-------------------
       getProgs(): void {//MEthode qui recupère les programmes grace à la méthode créee dans le service.
-        this.progservice.getProgs().subscribe(progs => {
+        this.eventGetProgs = this.progservice.getProgs().subscribe(progs => {
           this.progsFireBase = progs;
           this.loader.dismiss();// On fait disparaitre le loader
         });
@@ -128,7 +130,7 @@ export class ProgrammesPartialComponent implements OnInit {
     //Méthode qui recupère la liste des programmes from firebase
     getListProgsFirebase(){
       // Use snapshotChanges().map() to store the key
-      this.progsServiceFireApi.getProgsList().snapshotChanges().map(changes => {
+      this.eventGetProgsFirebase = this.progsServiceFireApi.getProgsList().snapshotChanges().map(changes => {
         return changes.map(c => ({ key: c.payload.key, ...c.payload.val() }));
       }).subscribe(result => {
         //ToDO: Quand la liste a été récupérée
@@ -146,6 +148,15 @@ export class ProgrammesPartialComponent implements OnInit {
           content: "Chargement..."
         });
         this.loader.present();
+
+        setTimeout(() => {
+          this.loader.dismiss();
+          this.toastCtrl.create({
+            message: 'Veuillez vous connecter à Internet',
+            duration: 3000,
+            position: 'bottom'
+          });
+        }, 12000);
       }
 
       //Methodes pour tester la connection waserbywork
@@ -157,6 +168,11 @@ export class ProgrammesPartialComponent implements OnInit {
         private isOffline(): boolean {
           return this.network.type.toLowerCase() === 'none';
         }
+
+    //Dismiss
+    dismiss() {
+      this.viewCtrl.dismiss();
+    }
 
 }
 

@@ -4,6 +4,7 @@ import { Produit } from '../../models/produit-model';
 import { ResultatListPartialComponent } from '../resultat-list-partial/resultat-list-partial';
 import { ResultatRecherchePage } from '../../pages/resultat-recherche/resultat-recherche';
 import { NavController, AlertController, Platform, LoadingController } from 'ionic-angular';
+import { global } from '../../mocks/global';// VARIABLE GLOBALE
 
 //Native
 import { LocalNotifications } from '@ionic-native/local-notifications';
@@ -11,6 +12,7 @@ import { Storage as Store } from '@ionic/storage';
 import { ListeProgrammesPage } from '../../pages/liste-programmes/liste-programmes';
 import { Network } from '@ionic-native/network';
 import { HomePage } from '../../pages/home/home';
+import { Subscription } from 'rxjs';
 
 /**
  * Generated class for the FiltrePartialComponent component.
@@ -32,31 +34,33 @@ export class FiltrePartialComponent implements OnInit {
   text: number = 0;//Pour filtre template
   boutonRechercherOn : boolean;
   loader: any; //Loader
+  eventConnect : Subscription;
+  eventDisconnect : Subscription;
 
   //METHODES LIFECYCLE
   constructor(public loadingCtrl: LoadingController, private network: Network, private plt: Platform, private alertCtrl: AlertController, public storage: Store, private localNotifications: LocalNotifications, public navCtrl: NavController, private progsServiceFireApi: ProgsProviderFireApi) {
-    // this.plt.ready().then(() => {
-    //   //TODO quand on clique une notif
-    //   this.localNotifications.on('click').subscribe( notification => {
-    //     //Ca lance une alerte avec un bouton menant vers la notification
-    //     let alert = alertCtrl.create({
-    //       title: notification.title,
-    //       subTitle: notification.text,
-    //       buttons: [{
-    //         text: 'Voir',
-    //         handler: () => {
-    //           //TODO quand on clique une notif LOCAL
-    //           this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
-    //         }
-    //       }]
-    //     });
-    //     alert.present();
-    //   })
-    // })//PLATFORM READY
+    this.plt.ready().then(() => {
+      //TODO quand on clique une notif
+      this.localNotifications.on('click').subscribe( notification => {
+        //Ca lance une alerte avec un bouton menant vers la notification
+        let alert = alertCtrl.create({
+          title: notification.title,
+          subTitle: notification.text,
+          buttons: [{
+            text: 'Voir',
+            handler: () => {
+              //TODO quand on clique une notif LOCAL
+              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
+            }
+          }]
+        });
+        alert.present();
+      })
+    })//PLATFORM READY
   }// FIN contructeur
 
   ngOnInit(): void {
-    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';    
+    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
     //Si le phone est déconnecté
     if(this.isOnline()) { 
       //ToDO: Si le phone est online
@@ -65,44 +69,68 @@ export class FiltrePartialComponent implements OnInit {
       this.restGetProduits();
     } else {
       this.boutonRechercherOn = false;
-      let alertDecon = this.alertCtrl.create({
-        title: "Déconnecté !!",
-        subTitle: "Veuillez vous connecter pour accéder aux services",
-        buttons: [{
-          text: 'Retour',
-          handler: () => {
-            //TODO quand on clique une notif LOCAL
-            this.navCtrl.setRoot(HomePage);
-          }
-        }]
-      });
-      alertDecon.present();
+      
+        let alertDecon = this.alertCtrl.create({
+          title: "Déconnecté !!",
+          subTitle: "Veuillez vous connecter pour accéder aux services",
+          buttons: [{
+            text: 'Retour',
+            handler: () => {
+              //TODO quand on clique une notif LOCAL
+              this.eventConnect.unsubscribe();
+              this.navCtrl.popToRoot();
+            }
+          }]
+        });
+        alertDecon.present();
+      
     }
     //CHANGE STATE TO CONNECT
-    this.network.onConnect().subscribe(() => {
+    this.eventConnect = this.network.onConnect().subscribe(() => {
       console.log('network connected!');
       this.boutonRechercherOn = true;
       this.presentLoading();//Affiche le loading
       this.restGetProduits();
     });
     //CHANGE STATE TO DISCONNECT
-    this.network.onDisconnect().subscribe(() => {
+    this.eventDisconnect = this.network.onDisconnect().subscribe(() => {
       this.boutonRechercherOn = false;// Je grise le bouton
       console.log('network disconnected!');
-      let alertDecon = this.alertCtrl.create({
-        title: "Déconnecté !!",
-        subTitle: "Veuillez vous connecter pour pouvoir acceder aux services sablux",
-        buttons: [{
-          text: 'Retour',
-          handler: () => {
-            //TODO quand on clique une notificiation LOCAL
-            this.navCtrl.setRoot(HomePage);
-          }
-        }]
-      });
-      alertDecon.present();
+        let alertDecon = this.alertCtrl.create({
+          title: "Déconnecté  !!",
+          subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
+          buttons: [{
+            text: 'Retour',
+            handler: () => {
+              //TODO quand on clique une notificiation LOCAL
+              this.navCtrl.pop();
+            }
+          }]
+        });
+        alertDecon.present();
     });
   }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad Filtre-Partial');
+  }
+
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter Filtre-Partial');
+  }
+
+  ionViewWillLeave(){
+    // this.eventConnect.unsubscribe();
+    console.log('ionViewWillLeave Filtre-Partial byeee');
+
+  }
+
+  ionViewDidLeave(){
+    //this.event.unsubscribe();
+    console.log('ionViewDidLeave Filtre-Partial byeee');
+  }
+
 
   //METHODES LOGIQUE METIER
   //For Api REST
@@ -144,6 +172,7 @@ export class FiltrePartialComponent implements OnInit {
       icon: 'assets/img/icon.png',
       data: item
     });
+    global.skipLocalNotificationReady = true;
   }
   //METHODE TEST Si il ya un NEW PROGRAMME
   testNewProgramme(nouveauTabProduits) {
@@ -203,5 +232,21 @@ export class FiltrePartialComponent implements OnInit {
         content: "Chargement..."
       });
       this.loader.present();
+
+      setTimeout(() => {
+        this.loader.dismiss();
+        let alertDecon = this.alertCtrl.create({
+          title: "Vous n'êtes pas connecté à Internet !",
+          subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
+          buttons: [{
+            text: 'Retour',
+            handler: () => {
+              //TODO quand on clique une notif LOCAL
+              this.navCtrl.pop();
+            }
+          }]
+        });
+        alertDecon.present();
+      }, 12000);
     }
 }
