@@ -9,6 +9,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { CordovaOptions } from '@ionic-native/core';
 import { global } from '../../mocks/global';// VARIABLE GLOBALE
 import { Subscription } from 'rxjs';
+import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 
 @Component({
   selector: 'page-home',
@@ -17,10 +18,14 @@ import { Subscription } from 'rxjs';
 export class HomePage {
   activeItemSliding: ItemSliding = null;
   numeroSablux ="338694000";
-  event : Subscription;
+  eventNotif : Subscription;
 
-  constructor(public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
-  //TRAITEMENT quand on clique une notif (Je l'ai mis ici car c'est la page qui est lancer en première)
+  constructor(private iab: InAppBrowser, public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
+  
+  }
+
+  ionViewDidEnter(){
+    //TRAITEMENT quand on clique une notif (Je l'ai mis ici car c'est la page qui est lancer en première)
     this.platform.ready().then(() => {
       //J'ai une variable globale que je met à true quand je notifie (Dans la page Filtre-partial )
       //if(global.skipLocalNotificationReady = true){// Si j'ai notifier alors 
@@ -28,16 +33,16 @@ export class HomePage {
        // global.skipLocalNotificationReady = false;
       //}
       //TODO quand on clique une notif
-      let event = this.localNotifications.on('click').subscribe( notification => {
+      this.eventNotif = this.localNotifications.on('click').subscribe( notification => {
         //Ca lance une alerte avec un bouton menant vers la notification
-        let alert = alertCtrl.create({
+        let alert = this.alertCtrl.create({
           title: notification.title,
           subTitle: notification.text,
           buttons: [{
             text: 'Voir',
             handler: () => {
               //TODO quand on clique une notif LOCAL
-              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
+              this.sendInputs({zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price});       
             }
           }]
         });
@@ -46,15 +51,11 @@ export class HomePage {
     })//PLATFORM READY
   }
 
-  ionViewWillLeave(){
-    // this.eventConnect.unsubscribe();
+  ionViewWillLeave() {
+    //En quittant la page je unsunscribe les subscribes effectué
     console.log('ionViewWillLeave HOME byeee');
-
-  }
-
-  ionViewDidLeave(){
-    //this.event.unsubscribe();
-    console.log('ionViewDidLeave HOME byeee');
+    this.eventNotif.unsubscribe();
+    console.log("UNSUBSCRIBE DONE FOR Notification");
   }
 
   //----------Methode pour que le itemsliding fasse le move de slide quand on clique dessus----------
@@ -62,17 +63,26 @@ export class HomePage {
     console.log('opening item slide..');
     
     if(this.activeItemSliding!==null) //use this if only one active sliding item allowed
-     this.closeOption();
+      this.closeOption();
  
     this.activeItemSliding = itemSlide;
     let swipeAmount;
     if(test=='biens'){
+
       swipeAmount = 259; //set your required swipe amount
+    
     }else if(test=='contact')
     {
-      swipeAmount = 184;
+      swipeAmount = 188;
+
+    }else if(test=='espace'){
+      
+      swipeAmount = 180;
+
     }else{
+
       swipeAmount = 176;
+
     }
 
     itemSlide._setOpenAmount(swipeAmount, false) ;
@@ -106,9 +116,20 @@ export class HomePage {
   openTrouverBien(valeur: any){ // On recupère le statut (louer/vendre)
     this.navCtrl.push(TrouverBienPage, valeur);
   }
-//Methode pour ouvrir l
+//Methode pour ouvrir CONTACT
   openContact(valeur: any){ // On recupère le statut (louer/vendre)
     this.navCtrl.push(ContactPage, valeur);
+  }
+//Methode pour ouvrir l'ESPACE
+  openBrowser(url: string){ 
+    //On definit les options et on donne l'url
+    const options: InAppBrowserOptions = {
+      zoom:'no',
+      location:'no',
+      toolbar:'no'
+    };
+    const browser = this.iab.create(url,'_self',options);
+    browser.show();
   }
 
   //Fonction d'appel 

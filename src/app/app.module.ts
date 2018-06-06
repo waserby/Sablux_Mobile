@@ -30,8 +30,8 @@ import { EmailComposer } from '@ionic-native/email-composer';
 import { CallNumber } from '@ionic-native/call-number';
 import { OneSignal } from '@ionic-native/onesignal';
 import { LocalNotifications } from '@ionic-native/local-notifications';
-import { AlertOnce } from '../providers/stop-mult-alert/stop-mult-alert';
-
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @NgModule({
   declarations: [
@@ -70,7 +70,8 @@ import { AlertOnce } from '../providers/stop-mult-alert/stop-mult-alert';
     CallNumber,
     OneSignal,
     LocalNotifications,
-    AlertOnce
+    BackgroundMode,
+    InAppBrowser
   ]
 })
 export class AppModule {}

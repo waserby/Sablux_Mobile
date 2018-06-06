@@ -21,6 +21,7 @@ import { Produit } from '../../models/produit-model';
 })
 export class ResultatRecherchePage implements OnInit {
   incomes = {}; //On garde les critères du USER
+  tabAllProduits = {}; //On garde les critères du USER
 
   //METHODES LIFECYCLE
   constructor(public viewCtrl: ViewController, public navCtrl: NavController, public navParams: NavParams, private progsServiceFireApi: ProgsProviderFireApi) {
@@ -28,6 +29,7 @@ export class ResultatRecherchePage implements OnInit {
   ngOnInit(): void {
     //On récupère les données send from page recherche avec FILTRE
     this.incomes = this.navParams.get('datafiltre');
+    this.tabAllProduits = this.navParams.get('tabAllProduits');
     console.log(this.incomes);    
   }
 

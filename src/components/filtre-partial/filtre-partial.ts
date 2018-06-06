@@ -28,63 +28,91 @@ export class FiltrePartialComponent implements OnInit {
   @Input() itemStatut: String; // recoit le statut (Louer/Vendre) From Component Parent qui est Trouver-bien
   tabProduits: any;//Tableau de programme LOCAL: string;
   urlProduits: string;
+  token : string;
   arrayZone: string[] = []; //Tableau des zone disponible dans les programmes de l'API
   //NG MODEL des inputs
-  inputs = { zone: "none", type: "none", prix: 0 };// On initialise pour les default entrie et on recupère en two way databinding
+  inputs = { zone: "none", type: "none", prix: 1 };// On initialise pour les default entrie et on recupère en two way databinding
   text: number = 0;//Pour filtre template
   boutonRechercherOn : boolean;
   loader: any; //Loader
+  //Les evenements declenchés à l'ouverture de cette page
   eventConnect : Subscription;
   eventDisconnect : Subscription;
+  eventNotifFiltre : Subscription;
 
   //METHODES LIFECYCLE
   constructor(public loadingCtrl: LoadingController, private network: Network, private plt: Platform, private alertCtrl: AlertController, public storage: Store, private localNotifications: LocalNotifications, public navCtrl: NavController, private progsServiceFireApi: ProgsProviderFireApi) {
     this.plt.ready().then(() => {
-      //TODO quand on clique une notif
-      this.localNotifications.on('click').subscribe( notification => {
-        //Ca lance une alerte avec un bouton menant vers la notification
-        let alert = alertCtrl.create({
-          title: notification.title,
-          subTitle: notification.text,
-          buttons: [{
-            text: 'Voir',
-            handler: () => {
-              //TODO quand on clique une notif LOCAL
-              this.sendInputs({datafiltre: {zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price}});       
-            }
-          }]
-        });
-        alert.present();
-      })
-    })//PLATFORM READY
-  }// FIN contructeur
+       //TODO quand on clique une notif
+       this.eventNotifFiltre = this.localNotifications.on('click').subscribe( notification => {
+         //Ca lance une alerte avec un bouton menant vers la notification
+         let alert = alertCtrl.create({
+           title: notification.title,
+           subTitle: notification.text,
+           buttons: [{
+             text: 'Voir',
+             handler: () => {
+               //TODO quand on clique une notif LOCAL
+               this.sendInputs({zone: notification.data.zone, type: notification.data.typeproduit, prix: notification.data.price});       
+             }
+           }]
+         });
+         alert.present();
+       })
+     })//PLATFORM READY
+  }//FIN contructeur
 
   ngOnInit(): void {
-    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
+    this.urlProduits = 'http://seproerp.ddns.net:82/api/index.php/product/list?'; //Without token (j ajoute le bon token dans le service)
+    this.boutonRechercherOn = true;
+    
+    //Algo pour executer le loading from API une seule fois par jour ()
+    this.storage.get('stockerBool').then(bool => {
+      console.log("Boolean stock test: "+bool);
+      if (bool == null || bool == false) {//Quand le user viens d'entrer dans l'appli (bool = nul) ou que le bool est a false cad on doit recharger
+        this.presentLoading();
+        this.restGetProduits();
+        this.storage.set('stockerBool', true);// Je met la variable à true
+        //On remet le bool a false pour charger l'api la prochaine fois
+        // setTimeout(() => {
+        //   this.storage.set('stockerBool', false);// Je met la variable à false
+        // }, 20000);// 2 HEURES
+      }else {//Tableau de produits déja chargé donc on ne recharge pas, on use ce qui est stocker
+        this.storage.get('produits').then(data => { this.tabProduits = data});// Le tableau de produits précédemment stocker est recuperer
+        this.storage.get('arrayZone').then(data => {this.arrayZone = data});
+        // setTimeout(() => {
+        // this.storage.set('stockerBool', false);// Je met la variable à false
+        // }, 20000);// 2 HEURES 7200000
+      }
+    })
+    .catch(err => {
+      console.log('Your data don\'t exist and returns error in catch: ' + JSON.stringify(err));
+    });
+
     //Si le phone est déconnecté
-    if(this.isOnline()) { 
-      //ToDO: Si le phone est online
-      this.boutonRechercherOn = true;
-      this.presentLoading();//Affiche le loading
-      this.restGetProduits();
-    } else {
-      this.boutonRechercherOn = false;
+    // if(this.isOnline()) { 
+    //   //ToDO: Si le phone est online
+    //   this.boutonRechercherOn = true;
+    //   this.presentLoading();//Affiche le loading
+    //   this.restGetProduits();
+    // } else {
+    //   this.boutonRechercherOn = false;
       
-        let alertDecon = this.alertCtrl.create({
-          title: "Déconnecté !!",
-          subTitle: "Veuillez vous connecter pour accéder aux services",
-          buttons: [{
-            text: 'Retour',
-            handler: () => {
-              //TODO quand on clique une notif LOCAL
-              this.eventConnect.unsubscribe();
-              this.navCtrl.popToRoot();
-            }
-          }]
-        });
-        alertDecon.present();
-      
-    }
+    //     let alertDecon = this.alertCtrl.create({
+    //       title: "Déconnecté !!",
+    //       subTitle: "Veuillez vous connecter pour accéder aux services",
+    //       buttons: [{
+    //         text: 'Retour',
+    //         handler: () => {
+    //           //TODO quand on clique une notif LOCAL
+    //           this.eventConnect.unsubscribe();
+    //           this.navCtrl.popToRoot();
+    //         }
+    //       }]
+    //     });
+    //     alertDecon.present();
+    // }
+
     //CHANGE STATE TO CONNECT
     this.eventConnect = this.network.onConnect().subscribe(() => {
       console.log('network connected!');
@@ -115,7 +143,6 @@ export class FiltrePartialComponent implements OnInit {
     console.log('ionViewDidLoad Filtre-Partial');
   }
 
-
   ionViewDidEnter() {
     console.log('ionViewDidEnter Filtre-Partial');
   }
@@ -123,14 +150,12 @@ export class FiltrePartialComponent implements OnInit {
   ionViewWillLeave(){
     // this.eventConnect.unsubscribe();
     console.log('ionViewWillLeave Filtre-Partial byeee');
-
   }
 
   ionViewDidLeave(){
     //this.event.unsubscribe();
     console.log('ionViewDidLeave Filtre-Partial byeee');
   }
-
 
   //METHODES LOGIQUE METIER
   //For Api REST
@@ -156,13 +181,16 @@ export class FiltrePartialComponent implements OnInit {
         }
       this.loader.dismiss();// On fait disparaitre le loader
       }
+      this.storage.set('arrayZone', this.arrayZone);// Je stocke le nouveau tableau de zones
     });
   }
 
   //Methode de VALIDATION DU FORMULAIRE
-  sendInputs(valeur) {
-    this.navCtrl.push('page-resultat-recherche', valeur);//J'envoi la valeur à travers un navCTRL
+  sendInputs(inputs : any) {
+    let envoi = {datafiltre: inputs, tabAllProduits: this.tabProduits};
+    this.navCtrl.push('page-resultat-recherche', envoi);//J'envoi la valeur à travers un navCTRL
   }
+
   //Methode pour NOTIFIER
   notifier(titre: string, text: string, item: any) {
     // Schedule a single notification
@@ -202,10 +230,10 @@ export class FiltrePartialComponent implements OnInit {
             let contenuNotif: string = "C'est un " + item.typeproduit + " situé à " + item.zone;
             this.notifier(titreNotif, contenuNotif, item);//On notifie
             console.log(" L'ID de l'item : " + itemNumb + " Son contenu" + item);
-            //Je set encore la novelle liste de produits pour un prochain test
+            //Je set encore la nouvelle liste de produits pour un prochain test
             this.storage.set('produits', this.tabProduits);// Je STORE le tableau de produits pour les notifications        
           } else {
-            console.log("BAD ITEM: L'ID de l'item : " + itemNumb);
+            console.log("BAD ITEM: L'ID de l'item : "+itemNumb);
           }
         }
       } else {
@@ -217,36 +245,36 @@ export class FiltrePartialComponent implements OnInit {
 
    //Methodes pour tester la connection waserbywork
     //Method that returns true if the user is connected to internet
-    private isOnline(): boolean {
-        return this.network.type.toLowerCase() !== 'none';
-    }
-    // Method that returns true if the user is not connected to internet
-    private isOffline(): boolean {
-      return this.network.type.toLowerCase() === 'none';
-    }
+    // private isOnline(): boolean {
+    //     return this.network.type.toLowerCase() !== 'none';
+    // }
+    // // Method that returns true if the user is not connected to internet
+    // private isOffline(): boolean {
+    //   return this.network.type.toLowerCase() === 'none';
+    // }
 
   //--------------Loader Methode--------------
     //Le loading pendant que ca charge
     presentLoading() {
       this.loader = this.loadingCtrl.create({
-        content: "Chargement..."
+        content: "Chargement des biens immobiliers. Cela prendra 1 minute au plus..."
       });
       this.loader.present();
 
-      setTimeout(() => {
-        this.loader.dismiss();
-        let alertDecon = this.alertCtrl.create({
-          title: "Vous n'êtes pas connecté à Internet !",
-          subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
-          buttons: [{
-            text: 'Retour',
-            handler: () => {
-              //TODO quand on clique une notif LOCAL
-              this.navCtrl.pop();
-            }
-          }]
-        });
-        alertDecon.present();
-      }, 12000);
+      // setTimeout(() => {
+      //   this.loader.dismiss();
+      //   let alertDecon = this.alertCtrl.create({
+      //     title: "Vous n'êtes pas connecté à Internet !",
+      //     subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
+      //     buttons: [{
+      //       text: 'Retour',
+      //       handler: () => {
+      //         //TODO quand on clique une notif LOCAL
+      //         this.navCtrl.pop();
+      //       }
+      //     }]
+      //   });
+      //   alertDecon.present();
+      // }, 300000);
     }
 }

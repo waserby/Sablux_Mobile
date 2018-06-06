@@ -26,7 +26,7 @@ export class DetailProgrammePage {
   }
 
   ngOnInit(){
-    this.chooseprog =  this.navParams.get('itemall')
+    this.chooseprog =  this.navParams.get('itemall');
     console.log(this.chooseprog.nom);
   }
 
@@ -35,8 +35,8 @@ export class DetailProgrammePage {
   }
 
 
-  public openContacter() {
-    var data = { typeContact : 'contactFromProgramme' };
+  public openContacter(prog : any) {
+    var data = { typeContact : 'contactFromProgramme', programmeAll : prog};
     var modalPage = this.modalCtrl.create('page-contact', data); 
     modalPage.present(); 
   }

@@ -23,10 +23,12 @@
     "@angular/platform-browser-dynamic": "^6.0.2",
     "@capacitor/cli": "^1.0.0-alpha.36",
     "@capacitor/core": "^1.0.0-alpha.36",
+    "@ionic-native/background-mode": "^4.7.0",
     "@ionic-native/call-number": "^4.7.0",
     "@ionic-native/core": "^4.7.0",
     "@ionic-native/email-composer": "^4.7.0",
     "@ionic-native/google-maps": "^4.7.0",
+    "@ionic-native/in-app-browser": "^4.7.0",
     "@ionic-native/local-notifications": "^4.7.0",
     "@ionic-native/network": "^4.7.0",
     "@ionic-native/onesignal": "^4.7.0",
@@ -37,6 +39,7 @@
     "angularfire2": "5.0.0-rc.3",
     "call-number": "^1.0.1",
     "cordova-android": "~7.0.0",
+    "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-badge": "^0.8.7",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-email-composer": "^0.8.15",
@@ -81,6 +84,7 @@
       "mx.ferreyra.callnumber": {},
       "cordova-plugin-local-notification": {},
       "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-background-mode": {},
       "onesignal-cordova-plugin": {}
     },
     "platforms": [

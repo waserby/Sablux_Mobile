@@ -45,6 +45,7 @@ export class ProgrammesPartialComponent implements OnInit {
         ngOnInit() {
           this.platform.ready().then(() => {
             this.presentLoading();
+            this.getListProgsFirebase();
             
             if(this.isOnline()) { 
               //ToDO: Si le user est online
@@ -112,8 +113,8 @@ export class ProgrammesPartialComponent implements OnInit {
         //this.progsFireBase = this.progservice.getProgs();
       }
 
-      opendetailprogramme(itemid: number) {//Pour afficher la page detail programme
-        let window = this.navCtrl.push('page-detail-programme', itemid);//J'envoi la valeur à travers un navCTRL
+      opendetailprogramme(itemall: any) {//Pour afficher la page detail programme
+        let window = this.navCtrl.push('page-detail-programme', itemall);//J'envoi la valeur à travers un navCTRL
       }
   
   //---------------FIN METHODES COMMUNICATIONS INTERNES APP----------------
@@ -152,11 +153,12 @@ export class ProgrammesPartialComponent implements OnInit {
         setTimeout(() => {
           this.loader.dismiss();
           this.toastCtrl.create({
-            message: 'Veuillez vous connecter à Internet',
+            message: 'Pas de connexion ! Chargement des programmes en local',
             duration: 3000,
             position: 'bottom'
           });
-        }, 12000);
+          this.getProgs(); //Chargement des programmes en local waser
+        }, 12000); 
       }
 
       //Methodes pour tester la connection waserbywork
@@ -169,10 +171,10 @@ export class ProgrammesPartialComponent implements OnInit {
           return this.network.type.toLowerCase() === 'none';
         }
 
-    //Dismiss
-    dismiss() {
-      this.viewCtrl.dismiss();
-    }
+      //Dismiss
+      dismiss() {
+        this.viewCtrl.dismiss();
+      }
 
 }
 

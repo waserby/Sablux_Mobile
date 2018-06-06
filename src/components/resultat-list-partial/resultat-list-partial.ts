@@ -24,8 +24,9 @@ import { Network } from '@ionic-native/network';
   templateUrl: 'resultat-list-partial.html'
 })
 export class ResultatListPartialComponent implements OnInit {
-  @Input() itemIncomes: any;; //Réception 
-  tabProduits: any;//Tableau de programme LOCAL: string;
+  @Input() itemIncomes: any; //Réception
+  @Input() arrayProduitsFromRequeteFiltre: any; //Réception 
+ 
   arrayResult: any[]=[]; //Tableau des resultats à afficher après filtre selon CRITERES
   urlProduits: string;
   numeroSablux="338694000"; //Numéro SABLUX
@@ -35,35 +36,13 @@ export class ResultatListPartialComponent implements OnInit {
   constructor(public navCtrl: NavController, private alertCtrl: AlertController, public loadingCtrl: LoadingController, private network: Network, public alertController: AlertController, public callNumber: CallNumber, private progsServiceFireApi: ProgsProviderFireApi, public modalCtrl : ModalController) {}
   
   ngOnInit(): void {
-    
-    this.urlProduits='http://seproerp.ddns.net:82/api/index.php/product/list?api_key=rvz6gy28';
-    console.log(this.itemIncomes);
-    //Si le phone est déconnecté
-    if(this.isOnline()) { 
-      //ToDO: Si le phone est online
-      this.presentLoading();//Affiche le loading
-      this.restGetProduits();
-    } else {
-      let alertDecon = this.alertCtrl.create({
-        title: "Déconnecté !!",
-        subTitle: "Veuillez vous connecter pour accéder aux services",
-        buttons: [{
-          text: 'Retour à l\'accueil',
-          handler: () => {
-            //TODO quand on clique une notif LOCAL
-            this.navCtrl.setRoot(HomePage);
-          }
-        }]
-      });
-      alertDecon.present();
-    }
-  
+    this.traitementProduits();
   }
 
   //------------------------------------METHODES LOGIQUE METIERS----------------------------------------------
   //Methodes boutons
-  public openContacter() {
-    var data = { typeContact : 'contactFromproduit' };
+  public openContacter(produit : any) {
+    var data = { typeContact : 'contactFromproduit', produitAll : produit};
     var modalPage = this.modalCtrl.create('page-contact', data); 
     modalPage.present(); 
   }
@@ -86,19 +65,16 @@ export class ResultatListPartialComponent implements OnInit {
   }
   
   //For Api REST
-  restGetProduits() {
-    this.progsServiceFireApi.restGet(this.urlProduits).then(data => {
-      this.tabProduits = data;
-
+  traitementProduits() {
       //---------------------------------FILTRAAAGE---------------------------------
-      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0))
+      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1))
       {
         //Cas ALL none
-        this.arrayResult = this.tabProduits;
+        this.arrayResult = this.arrayProduitsFromRequeteFiltre;
       
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1)) ) {
         //Cas ou une seule valeur est donnée (que ce soit zone, type ou prix)
-        for (let item of this.tabProduits) {
+        for (let item of this.arrayProduitsFromRequeteFiltre) {
           if((item.zone == this.itemIncomes.zone) || (item.typeproduit == this.itemIncomes.type) || (item.price <= this.itemIncomes.prix)) {
             this.arrayResult.push(item);
           }else{
@@ -106,9 +82,9 @@ export class ResultatListPartialComponent implements OnInit {
             console.log('Cas 1: item don\'t match '+item.zone+'  Type produit  '+item.typeproduit+' PRIX  '+item.price)          }
         }
 
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix != 0)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 1) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix != 1)) ) {
         //Cas ou 2 critères sont données 
-        for (let item of this.tabProduits) {
+        for (let item of this.arrayProduitsFromRequeteFiltre) {
           if(((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type)) || ((item.zone == this.itemIncomes.zone) && (item.price <= this.itemIncomes.prix)) || ((item.typeproduit == this.itemIncomes.type) && (item.price <= this.itemIncomes.prix))  ){      
             this.arrayResult.push(item);
           }else{
@@ -118,7 +94,7 @@ export class ResultatListPartialComponent implements OnInit {
         }
       }else {
         //Cas ou tous les critères sont renseignés.
-        for (let item of this.tabProduits) {
+        for (let item of this.arrayProduitsFromRequeteFiltre) {
           if((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type) && (item.price <= this.itemIncomes.prix)) {//ZONE
 
             this.arrayResult.push(item);
@@ -131,10 +107,7 @@ export class ResultatListPartialComponent implements OnInit {
         }
       }
       //------------------------FINNNN---------FILTRAAAGE---------------------------------
-
-      this.loader.dismiss();// On fait disparaitre le loader
       console.log("Voici le tableau : "+this.arrayResult);
-    });//Fin traitement after reception données api REST
   }
 
   //Methodes pour tester la connection waserbywork
@@ -149,28 +122,28 @@ export class ResultatListPartialComponent implements OnInit {
 
   //--------------Loader Methode--------------
     //Le loading pendant que ca charge
-    presentLoading() {
-      this.loader = this.loadingCtrl.create({
-        content: "Chargement..."
-      });
-      this.loader.present();
+    // presentLoading() {
+    //   this.loader = this.loadingCtrl.create({
+    //     content: "Chargement..."
+    //   });
+    //   this.loader.present();
 
-      setTimeout(() => {
-        this.loader.dismiss();
-        let alertDecon = this.alertCtrl.create({
-          title: "Vous n'êtes pas connecté à Internet!",
-          subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
-          buttons: [{
-            text: 'Retour',
-            handler: () => {
-              //TODO quand on clique une notif LOCAL
-              this.navCtrl.setRoot(HomePage);
-            }
-          }]
-        });
-        alertDecon.present();
-      }, 12000);
-    }
+    //   setTimeout(() => {
+    //     this.loader.dismiss();
+    //     let alertDecon = this.alertCtrl.create({
+    //       title: "Vous n'êtes pas connecté à Internet !",
+    //       subTitle: "Veuillez vous connecter pour pouvoir effectuer des recherches",
+    //       buttons: [{
+    //         text: 'Retour',
+    //         handler: () => {
+    //           //TODO quand on clique une notif LOCAL
+    //           this.navCtrl.setRoot(HomePage);
+    //         }
+    //       }]
+    //     });
+    //     alertDecon.present();
+    //   }, 12000);
+    // }
 
 }
 
@@ -178,7 +151,7 @@ export class ResultatListPartialComponent implements OnInit {
 
 //-----------SNIPPETS------------------
 //console.log("Un produit :  "+item.zone+"  ID: "+item.id+" de type "+item.typeproduit+" et qui coute "+item.price);
-//this.tabProduits.indexOf(item.zone) <= -1 
+//this.arrayProduitsFromRequeteFiltre.indexOf(item.zone) <= -1 
 
   //METHODES LOGIQUE METIER
 
@@ -186,7 +159,7 @@ export class ResultatListPartialComponent implements OnInit {
 
 
 //----------------SNIPPPETS----------------------
-// for (let item of this.tabProduits) {
+// for (let item of this.arrayProduitsFromRequeteFiltre) {
         //   if((item.zone == this.incomes.zone) && (item.type == this.incomes.type) && (item.etage == this.incomes.etage) && (item.prix <= this.incomes.prix)) {//ZONE
 
         //     this.arrayResult.push(item);
@@ -197,7 +170,7 @@ export class ResultatListPartialComponent implements OnInit {
         //   } // If ZONE
         // }
 //console.log("Un produit :  "+item.zone+"  ID: "+item.id+" de type "+item.typeproduit+" et qui coute "+item.price);
-//this.tabProduits.indexOf(item.zone) <= -1 
+//this.arrayProduitsFromRequeteFiltre.indexOf(item.zone) <= -1 
 
   //METHODES LOGIQUE METIER
 
@@ -205,7 +178,7 @@ export class ResultatListPartialComponent implements OnInit {
 
 
 //----------------SNIPPPETS----------------------
-// for (let item of this.tabProduits) {
+// for (let item of this.arrayProduitsFromRequeteFiltre) {
         //   if((item.zone == this.incomes.zone) && (item.type == this.incomes.type) && (item.etage == this.incomes.etage) && (item.prix <= this.incomes.prix)) {//ZONE
 
         //     this.arrayResult.push(item);
@@ -221,3 +194,27 @@ export class ResultatListPartialComponent implements OnInit {
         //this.incomes.etage = this.navParams.get('etage');
     //this.incomesAP = JSON.parse(this.incomes);
     //console.log("Voici la zone : "+this.navParams.get('zone'));
+
+
+
+
+    //Si le phone est déconnecté
+    // if(this.isOnline()) { 
+    //   //ToDO: Si le phone est online
+    //   this.presentLoading();//Affiche le loading
+    //   this.restGetProduits();
+    // } else {
+    //   let alertDecon = this.alertCtrl.create({
+    //     title: "Déconnecté !!",
+    //     subTitle: "Veuillez vous connecter pour accéder aux services",
+    //     buttons: [{
+    //       text: 'Retour à l\'accueil',
+    //       handler: () => {
+    //         //TODO quand on clique une notif LOCAL
+    //         this.navCtrl.setRoot(HomePage);
+    //       }
+    //     }]
+    //   });
+    //   alertDecon.present();
+    // }
+  

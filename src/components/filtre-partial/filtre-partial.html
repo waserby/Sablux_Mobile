@@ -6,7 +6,7 @@
   <!-- <ion-icon name="search"></ion-icon> -->
 </ion-card>
 
-<form (ngSubmit)="sendInputs({datafiltre: inputs})">
+<form (ngSubmit)="sendInputs(inputs)">
   <!-- Zone -->
   <ion-list radio-group>
 
@@ -43,12 +43,16 @@
       <ion-label>Type</ion-label>
       <ion-select name="input_type" [(ngModel)]="inputs.type" placeholder="Sans ce critère">
         <ion-option value="none">Sans ce critère</ion-option>
-        <ion-option value="villa">Villa</ion-option>
+        <ion-option value="Villa">Villa</ion-option>
+        <ion-option value="MAGASIN">Magasin</ion-option>
+        <ion-option value="Studio">Studio</ion-option>
         <ion-option value="F1">F1</ion-option>
         <ion-option value="F2">F2</ion-option>
         <ion-option value="F3">F3</ion-option>
         <ion-option value="F4">F4</ion-option>
         <ion-option value="F5">F5</ion-option>
+        <ion-option value="F6">F5</ion-option>
+        <ion-option value="F7">F5</ion-option>
       </ion-select>
     </ion-item>
 
@@ -57,14 +61,20 @@
   <ion-list radio-group>
     
       <ion-list-header>
-        <b>Choisissez un prix maximal (en FCFA)</b> 
+          <ion-col col-8><b>Choisissez un prix maximal (en FCFA) : </b></ion-col>
       </ion-list-header>
-      <ion-item>
-        <ion-range name="input_prix" min="0" max="2500000" pin="true" [(ngModel)]="inputs.prix" color="sablux">
-          <ion-icon range-left small name="cash"></ion-icon>
-          <ion-icon range-right name="cash"></ion-icon>
-        </ion-range>
-      </ion-item>
+      <!-- <ion-input type="number" name="prixmax" [(ngModel)]="inputs.prix"></ion-input> -->
+      <ion-row>
+        <ion-col offset-4 col-4><textarea name="prixmax" rows="1" maxLength="500" [(ngModel)]="inputs.prix"></textarea></ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-item>
+            <ion-range class='no-ptop' no-padding name="input_prix" min="0" max="4000000" pin="true" [(ngModel)]="inputs.prix" color="sablux">
+              <ion-icon range-left small name="cash"></ion-icon>
+              <ion-icon range-right name="cash"></ion-icon>
+            </ion-range>
+          </ion-item>
+      </ion-row>
 
   </ion-list>
   <!-- NIVEAU -->

@@ -16,6 +16,8 @@ import { ResultatMapPartialComponent } from './resultat-map-partial/resultat-map
 import { EmailComposer } from '@ionic-native/email-composer';
 import { CallNumber } from '@ionic-native/call-number';
 import { LocalNotifications } from '@ionic-native/local-notifications';
+import { BackgroundMode } from '@ionic-native/background-mode';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @NgModule({
 	declarations: [ProgrammesPartialComponent,
@@ -36,7 +38,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 		Network,
 		EmailComposer,
 		CallNumber,
-		LocalNotifications
+		LocalNotifications,
+		BackgroundMode,
+		InAppBrowser
 	  ]
 })
 export class ComponentsModule {}

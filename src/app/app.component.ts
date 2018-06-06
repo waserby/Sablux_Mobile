@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { OneSignal } from '@ionic-native/onesignal';
+import { BackgroundMode } from '@ionic-native/background-mode';
 
 //Pages
 import { HomePage } from '../pages/home/home';
@@ -24,15 +25,16 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor (private oneSignal : OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
+  constructor (private backgroundMode: BackgroundMode, private oneSignal : OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
     this.initializeApp();
+    this.backgroundMode.enable();//L'application continue à tourner même en BACKGROUND
 
     // LA LISTE DES PAGES used for an example of ngFor and navigation
     this.pages = [
       { title: 'Accueil', component: HomePage }, // Pas de HomePage car ca crée des repetitions sur les alertes lancées
       //{ title: 'Liste', component: ListPage },
-      { title: 'Nos programmes', component: ListeProgrammesPage },
-      { title: 'Trouver un bien', component: TrouverBienPage },
+      { title: 'Nos programmes immobiliers', component: ListeProgrammesPage },
+      { title: 'Trouver un bien immobilier', component: TrouverBienPage },
       { title: 'Nous contacter', component: ContactPage }
 
     ];
@@ -46,10 +48,25 @@ export class MyApp {
       // do something when notification is received
       });
 
-      this.oneSignal.handleNotificationOpened().subscribe(() => {
+      this.oneSignal.handleNotificationOpened().subscribe((data) => {
         // do something when a notification is opened
-        this.nav.push(ListeProgrammesPage, "{typeDeProgramme:'venir'}");
-      });
+        let action = data.notification.payload.additionalData.action;//Je récupère la data additionelle dans le push
+        
+        if(action == 'rechargeApi') {//si il ya de nouveau produits, je met a false donc les prgorammes seront rechargés
+          //this.storage.get('stockerBool').then(data => { alert(data) });
+          this.storage.set('stockerBool', false);// Je met la variable à false pour que les services soient rechargés
+          this.nav.push(TrouverBienPage);// JE vais voir sur la page
+        } else if ((action == 'realiser') || (action == 'cours') || (action == 'venir')) {
+          
+          let valeur = {typeDeProgramme: action };
+          this.nav.push(ListeProgrammesPage, valeur);
+        
+        } else {
+          
+          alert ("L'action est inconnu : "+action);
+        
+        }
+      });// Fin traitement on click notification
 
       this.oneSignal.endInit();
 

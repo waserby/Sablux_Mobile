@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Platform, AlertController, ToastController } from 'ionic-angular';
 import { OnInit } from '@angular/core';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { ProgrammeModel } from '../../models/programme-model';
 
 /**
  * Generated class for the ContactPage page.
@@ -23,6 +24,8 @@ export class ContactPage implements OnInit{
   @ViewChild('myInput') myInput: ElementRef; //on recupère l'&l&ment text area
 
   typeContact : String;
+  produitAll : any;
+  itemChooseProgramme : ProgrammeModel;
   entre = {prenom: "", nom: "", telephone: null, mail:"", modeContact:"telephone" , message:""};// On initialise pour les default entrie et on recupère en two way databinding
   
 
@@ -32,11 +35,16 @@ export class ContactPage implements OnInit{
 
   ngOnInit(): void {
     this.typeContact = this.navParams.get('typeContact');
-    if(this.typeContact=="contactFromproduit"){
-      this.entre.message  =`Je souhaiterais avoir plus de renseignement sur ce bien et prendre rendez-vous pour le visiter.\nPourriez-vous me recontacter?`;
-    }else if (this.typeContact=="contactFromProgramme"){
-      this.entre.message  =`je suis interessé par ce programme et je souhaiterais avoir plus de renseignements.\nPourriez-vous me recontacter?`;
-    }else{
+    this.produitAll = this.navParams.get('produitAll');
+    this.itemChooseProgramme = this.navParams.get('programmeAll'); // On recupère le programme send quand on clique sur contacter deans les details d'un programme
+    
+    
+    if(this.typeContact=="contactFromproduit") {
+      this.entre.message  =`Je souhaiterais avoir plus de renseignement sur le bien de label `+this.produitAll.label+` se trouvant à `+this.produitAll.zone+` et prendre rendez-vous pour le visiter.\nPourriez-vous me recontacter?`;
+
+    }else if (this.typeContact=="contactFromProgramme") {
+      this.entre.message  =`je suis interessé par le programme `+this.itemChooseProgramme.nom+` et je souhaiterais avoir plus de renseignements.\nPourriez-vous me recontacter?`;
+    }else {
       this.entre.message  =`Pourriez-vous me recontacter?`;
     }
     // console.log("le message : "+this.typeContact);
@@ -57,7 +65,7 @@ export class ContactPage implements OnInit{
       //Fonction de mailing
       let constructionSujet = "SABLUX MOBILE: Le client "+valeur.prenom+" "+valeur.nom+" souhaiterait être recontacter par "+valeur.modeContact;
       let constructionMessage = "Bonjour, <br/><br/>"+"M./Mme "+valeur.prenom+" "+valeur.nom+" souhaiterait être recontacter par "+valeur.modeContact+".<br/>Son numéro de telephone est "+valeur.telephone+" et son adresse email est "+valeur.mail+".<br/>Le client a aussi laissé un message qui est le suivant : <br/><br/>"+valeur.message+"<br/><br/>Bonne reception,";
-      this.sendEmail(constructionSujet,constructionMessage);
+      this.sendEmail(constructionSujet , constructionMessage);
     }else{//Cas ou le formulaire est incomplet
       let toastForm =this.toastCtrl.create({
         message: 'Veuillez remplir tous les champs s\'il vous plait',

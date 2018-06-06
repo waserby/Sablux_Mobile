@@ -66,21 +66,37 @@
 
         <ion-row no-padding> <!-- ROW3:   Acceder à votre espace membre-->
           <ion-col col-12 no-padding>
-            <ion-card no-padding>
-              <img no-padding src="assets/img/programmes/accueil/espace.jpg"/>
-              <div class="card-title">Accéder à votre espace membre</div>
-            </ion-card>
+            <ion-list no-margin>
+              <ion-item-sliding no-margin no-padding #slidingItem3>  <!-- On recupère le ion-item-sliding pour slider quand on clique-->
+                <ion-item no-margin no-padding #item3 (click)="openOption(slidingItem3, item3, 'espace')">
+                  <ion-card no-padding>
+                    <img no-padding src="assets/img/programmes/accueil/espace.jpg"/>
+                    <div class="card-title"><ion-icon name="contact"></ion-icon> Accéder à mon espace membre</div>
+                  </ion-card>
+                </ion-item>
+                <ion-item-options>
+                  <button ion-button color="light" icon-start (click)="openBrowser('https://adila.immo/')">
+                    <ion-icon name="planet"></ion-icon>
+                    Site WEB
+                  </button>
+                  <button class="slidebutton" ion-button icon-start (click)="openBrowser('http://espace-sablux.technosmartsn.com/')">
+                    <ion-icon name="contact"></ion-icon>
+                    ESPACE
+                  </button>
+                </ion-item-options>
+              </ion-item-sliding>
+            </ion-list>
           </ion-col>
         </ion-row> <!-- END ROW:3 -->
 
-        <ion-row no-padding> <!-- ROW4:   Contact-->
+        <ion-row no-padding> <!-- ROW4: Contact-->
           <ion-col col-12 no-padding>
             <ion-list no-margin>
               <ion-item-sliding no-margin no-padding #slidingItem4>  <!-- On recupère le ion-item-sliding pour slider quand on clique-->
                 <ion-item no-margin no-padding #item4 (click)="openOption(slidingItem4, item4, 'contact')">
                   <ion-card no-padding>
                     <img no-padding src="assets/img/programmes/accueil/contact.jpg"/>
-                    <div class="card-title"> Contacter nous</div>
+                    <div class="card-title"><ion-icon name="contacts"></ion-icon> Contacter SABLUX</div>
                   </ion-card>
                 </ion-item>
                 <ion-item-options>

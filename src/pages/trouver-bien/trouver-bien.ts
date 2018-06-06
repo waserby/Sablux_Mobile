@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FiltrePartialComponent } from '../../components/filtre-partial/filtre-partial';
+import { Storage as Store } from '@ionic/storage';
 
 /**
  * Generated class for the TrouverBienPage page.
@@ -19,7 +20,7 @@ export class TrouverBienPage implements OnInit{
   statut: String;
 
   //METHODES LIFECYCLE
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    constructor(public storage: Store, public navCtrl: NavController, public navParams: NavParams) {
     }
     
     ngOnInit(): void {
@@ -28,6 +29,8 @@ export class TrouverBienPage implements OnInit{
 
     ionViewDidLoad() {
       console.log('ionViewDidLoad TrouverBienPage');
+      // this.storage.set('stockerOK', false);// Je met la variable à true
+      // this.storage.get('stockerOK').then(data => {console.log(" stockerOK : "+data);});
     }
 
     ionViewWillLeave(){
@@ -38,6 +41,8 @@ export class TrouverBienPage implements OnInit{
       console.log("UNSUBSCRIBE DONE FOR CONNECT");
       this.childFiltre.eventDisconnect.unsubscribe();
       console.log("UNSUBSCRIBE DONE FOR DISCONNECT");
+      this.childFiltre.eventNotifFiltre.unsubscribe();
+      console.log("UNSUBSCRIBE DONE FOR NOTIFFILTRE");
     }
   
   //METHODES LOGIQUE METIER
