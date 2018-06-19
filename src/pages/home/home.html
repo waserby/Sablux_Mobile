@@ -7,7 +7,18 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content no-padding> 
+<ion-content no-padding>
+  <!-- Boutton des réseaux sociaux -->
+    <ion-fab right bottom>
+      <button ion-fab color="sablux"><ion-icon name="md-share"></ion-icon></button>
+      <ion-fab-list side="top">
+        <button ion-fab><ion-icon name="logo-facebook" (click)="openBrowser('https://www.facebook.com/Sabluxgroup')"></ion-icon></button>
+        <button ion-fab><ion-icon name="logo-twitter" (click)="openBrowser('https://twitter.com/sabluxgroup?lang=fr')"></ion-icon></button>
+        <button ion-fab><ion-icon name="logo-instagram" (click)="openBrowser('https://www.facebook.com/Sabluxgroup')"></ion-icon></button>
+        <button ion-fab><ion-icon name="logo-linkedin" (click)="openBrowser('https://www.linkedin.com/company/sablux-holding/')"></ion-icon></button>
+      </ion-fab-list>
+    </ion-fab>
+
     <ion-grid no-padding>
         
         <ion-row no-padding>  <!-- ROW1 : Nos Programmes Immobiliers -->
@@ -21,15 +32,15 @@
                   </ion-card>
                 </ion-item>
                 <ion-item-options >
-                  <button ion-button color="sablux" icon-start (click)="openListeProgrammes({typeDeProgramme:'realiser'})">
+                  <button ion-button color="sablux" icon-start (click)="openPage('page-liste-programmes' , 1 , {typeDeProgramme:'realiser'})">
                     <ion-icon name="done-all"></ion-icon>
                     Réalisés
                   </button>
-                  <button color="gris" ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'cours'})">
+                  <button color="gris" ion-button icon-start (click)="openPage('page-liste-programmes' , 1 , {typeDeProgramme:'cours'})">
                     <ion-icon name="ios-more"></ion-icon>
                     En Cours
                   </button>
-                  <button color="light"  ion-button icon-start (click)="openListeProgrammes({typeDeProgramme:'venir'})">
+                  <button color="light"  ion-button icon-start (click)="openPage('page-liste-programmes' , 1 , {typeDeProgramme:'venir'})">
                     <ion-icon name="home"></ion-icon>
                     A Venir
                   </button>
@@ -50,11 +61,11 @@
                           </ion-card>
                     </ion-item>
                     <ion-item-options>
-                      <button ion-button color="light" icon-start (click)="openTrouverBien({statutBien:'louer'})">
+                      <button ion-button color="light" icon-start (click)="openPage('page-trouver-bien', 2 ,{statutBien:'louer'})">
                         <ion-icon name="home"></ion-icon>
                         A Louer
                       </button>
-                      <button class="slidebutton" ion-button icon-start>
+                      <button class="slidebutton" ion-button icon-start (click)= "openAVendre()">
                         <ion-icon name="cash"></ion-icon>
                         A vendre
                       </button>
@@ -100,7 +111,7 @@
                   </ion-card>
                 </ion-item>
                 <ion-item-options>
-                  <button ion-button color="light" icon-start (click)="openContact()">
+                  <button ion-button color="light" icon-start (click)="openPage('page-contact', 4)">
                     <ion-icon name="contacts"></ion-icon>
                     Contacter
                   </button>

@@ -7,7 +7,7 @@
 <ion-header>
   <ion-navbar>
       <button ion-button menuToggle *ngIf="typeContact != 'contactFromproduit' && typeContact != 'contactFromProgramme'">
-        <ion-icon name="menu"></ion-icon>
+        <ion-icon name="menu" *ngIf="typeContact != 'contactFromproduit' && typeContact != 'contactFromProgramme'"></ion-icon>
       </button>
       <ion-title> Contact </ion-title>
       <ion-buttons end *ngIf="typeContact == 'contactFromproduit' || typeContact == 'contactFromProgramme'"> <!-- Ne s'affiche que si la page a été ouverte from produit-->
@@ -88,7 +88,8 @@
     
     </ion-list>
 
-    <button ion-button color="sablux" type="submit" full icon-left large> 
+    <br><br><br><br>
+    <button class="boutonDown" ion-button color="sablux" type="submit" full icon-left large> 
       <p margin-right>ENVOYER</p> 
       <ion-icon name="send"></ion-icon>
     </button>

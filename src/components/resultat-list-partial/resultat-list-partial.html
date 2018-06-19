@@ -1,5 +1,11 @@
 <!-- Generated template for the ResultatListPartialComponent component -->
-
+<!--  -->
+<div *ngIf="numberResult==0">
+  <img src="assets/img/programmes/accueil/sablier_carré.jpg"/>
+  <h1 class="pasDeResult" >PAS DE RESULTAT </h1>
+</div>
+  <!-- <ion-icon name="search"></ion-icon> -->
+<!--  -->
 <ion-card class="adv-map" *ngFor="let item of arrayResult">
   <div style="position: relative">
     <img src="assets/img/bicSablux.jpg">

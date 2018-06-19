@@ -13,7 +13,8 @@ import { Network } from '@ionic-native/network';
 import { NavController, NavParams, LoadingController, AlertController, Platform, Alert, ToastController, ViewController } from 'ionic-angular';// Pour naviguer et loading
 import { Observable, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-
+import { Storage as Store } from '@ionic/storage';
+import { HomePage } from '../../pages/home/home';
 
 @Component({
   selector: 'programmes-partial',
@@ -30,7 +31,7 @@ export class ProgrammesPartialComponent implements OnInit {
       connectedToInternet; //made global to get access 
       noInternetAlert; // made global to get access 
     //For API REST  
-      progsFireBase : any //From Firebase
+      progsFireBase : any //C'est le tableau CACHE, qui est affiché dans le template
       loader: any; //For Loader of Firebase
     //EVENTS SUBCRIBE
       eventConnectSubscription : Subscription;
@@ -41,21 +42,34 @@ export class ProgrammesPartialComponent implements OnInit {
   //-------FIN INITIALISATION DES VARIABLES---------------------
 
   //----------------METHODES LifeCycle-------------------
-      constructor(public viewCtrl: ViewController, private toastCtrl: ToastController, private platform: Platform, public alertCtrl: AlertController, private network: Network, private progsServiceFireApi: ProgsProviderFireApi ,private progservice: ProgsService,public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {}
+      constructor(public storage: Store, public viewCtrl: ViewController, private toastCtrl: ToastController, private platform: Platform, public alertCtrl: AlertController, private network: Network, private progsServiceFireApi: ProgsProviderFireApi ,private progservice: ProgsService,public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {}
         ngOnInit() {
           this.platform.ready().then(() => {
             this.presentLoading();
-            this.getListProgsFirebase();
+            //this.getListProgsFirebase();
             
             if(this.isOnline()) { 
               //ToDO: Si le user est online
               this.getListProgsFirebase();
+
             } else {
               //ToDO: Si le user est OFFLINE
-              this.isAvailable = true;
-              this.getProgs();
+              this.storage.get('listProgrammes').then(result => {
+                if (!result) {
+                  //Si les programmes n'avaient pas été récupéré from fireBASE et set alors
+                  this.getListProgsFirebase(); // Je les récupère et les store
+                }else {
+                  //Si une liste à déja été stocké, on l'utilise
+                  this.storage.get('listProgrammes').then(data => { this.progsFireBase = data});// Le tableau de produits précédemment stocker est recuperer
+                  this.isAvailable = true;
+                  this.loader.dismiss();
+                }
+              })
+              .catch(err => {
+                console.log('Your data don\'t exist and returns error in catch: ' + JSON.stringify(err));
+              });
+              
             }
-
             //CHANGE STATE TO CONNECT
               this.eventConnectSubscription = this.network.onConnect().subscribe(() => {
                 console.log('network connected!');
@@ -66,7 +80,7 @@ export class ProgrammesPartialComponent implements OnInit {
                 }
                 this.isAvailable = true;
                 this.connectedToInternet = this.toastCtrl.create({
-                  message: 'De nouveau connecté',
+                  message: 'De nouveau connecté. Mise à jour des programmes',
                   duration: 2000,
                   position: 'bottom'
                 });
@@ -87,10 +101,8 @@ export class ProgrammesPartialComponent implements OnInit {
                   duration: 2000,
                   position: 'bottom'
                  });
-                
-                this.presentLoading();//Affiche le loading
-                this.getProgs();
-                this.noInternetAlert.present();
+                 this.storage.get('listProgrammes').then(data => { this.progsFireBase = data});// Le tableau de produits précédemment stocker est recuperer
+                 this.noInternetAlert.present();
               });
 
             //this.ajoutAllProgsFirebase(); // FIREBASE Insertion de Tous les programmes du mock
@@ -105,13 +117,13 @@ export class ProgrammesPartialComponent implements OnInit {
 
   
   //----------------METHODES Communication interne-------------------
-      getProgs(): void {//MEthode qui recupère les programmes grace à la méthode créee dans le service.
-        this.eventGetProgs = this.progservice.getProgs().subscribe(progs => {
-          this.progsFireBase = progs;
-          this.loader.dismiss();// On fait disparaitre le loader
-        });
-        //this.progsFireBase = this.progservice.getProgs();
-      }
+      // getProgs(): void {//MEthode qui recupère les programmes grace à la méthode créee dans le service.
+      //   this.eventGetProgs = this.progservice.getProgs().subscribe(progs => {
+      //     this.progsFireBase = progs;
+      //     this.loader.dismiss();// On fait disparaitre le loader
+      //   });
+      //   //this.progsFireBase = this.progservice.getProgs();
+      // }
 
       opendetailprogramme(itemall: any) {//Pour afficher la page detail programme
         let window = this.navCtrl.push('page-detail-programme', itemall);//J'envoi la valeur à travers un navCTRL
@@ -136,6 +148,7 @@ export class ProgrammesPartialComponent implements OnInit {
       }).subscribe(result => {
         //ToDO: Quand la liste a été récupérée
         this.progsFireBase = result;
+        this.storage.set('listProgrammes', this.progsFireBase);// Je les store
         this.loader.dismiss();// On fait disparaitre le loader
       }); 
     }
@@ -151,14 +164,33 @@ export class ProgrammesPartialComponent implements OnInit {
         this.loader.present();
 
         setTimeout(() => {
-          this.loader.dismiss();
-          this.toastCtrl.create({
-            message: 'Pas de connexion ! Chargement des programmes en local',
-            duration: 3000,
-            position: 'bottom'
-          });
-          this.getProgs(); //Chargement des programmes en local waser
-        }, 12000); 
+          //après 10 secondes, on charge les programmes locaux
+          //ToDO: Si le user est OFFLINE
+          this.storage.get('listProgrammes').then(result => {
+            if (!result) {
+              //Si on n'avais jamais recuperer les programmes, on alert et on fait retour
+              let alertDecon = this.alertCtrl.create({
+                title: "Vous n'êtes pas connecté à Internet !",
+                subTitle: "Veuillez vous connecter pour charger les programmes",
+                buttons: [{
+                text: 'Retour',
+                  handler: () => {
+                  //TODO quand on clique une notif LOCAL
+                    this.navCtrl.setRoot(HomePage);
+                  }
+                }]
+              });
+              alertDecon.present();
+            }else{
+              //Si les programmes n'avaient pas été récupéré from fireBASE et set alors
+              this.storage.get('listProgrammes').then(data => { this.progsFireBase = data});// Le tableau de produits précédemment stocker est recuperer            }else {
+            }
+          })
+          .catch(err => {
+            console.log('Your data don\'t exist and returns error in catch: ' + JSON.stringify(err));
+          });   
+          this.loader.dismiss();       
+        }, 10000); 
       }
 
       //Methodes pour tester la connection waserbywork

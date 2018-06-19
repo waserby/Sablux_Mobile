@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ItemSliding, Item, AlertController, Platform } from 'ionic-angular';
+import { NavController, ItemSliding, Item, AlertController, Platform, ToastController, Events } from 'ionic-angular';
 //Pages
 import { ListeProgrammesPage } from '../liste-programmes/liste-programmes';
 import { TrouverBienPage } from '../trouver-bien/trouver-bien';
@@ -20,11 +20,12 @@ export class HomePage {
   numeroSablux ="338694000";
   eventNotif : Subscription;
 
-  constructor(private iab: InAppBrowser, public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
+  constructor(public events: Events, private toastCtrl: ToastController, private iab: InAppBrowser, public platform: Platform, private alertCtrl: AlertController, private localNotifications: LocalNotifications, public alertController: AlertController, public callNumber: CallNumber, public navCtrl: NavController) {
   
   }
 
   ionViewDidEnter(){
+    console.log("Entrer HOME");
     //TRAITEMENT quand on clique une notif (Je l'ai mis ici car c'est la page qui est lancer en première)
     this.platform.ready().then(() => {
       //J'ai une variable globale que je met à true quand je notifie (Dans la page Filtre-partial )
@@ -77,12 +78,12 @@ export class HomePage {
 
     }else if(test=='espace'){
       
-      swipeAmount = 180;
+      swipeAmount = 169;
 
     }else{
 
       swipeAmount = 176;
-
+      
     }
 
     itemSlide._setOpenAmount(swipeAmount, false) ;
@@ -108,18 +109,21 @@ export class HomePage {
 //------------FIN METHODES SLIDING BUTTONS---------------
 
 //Methode pour ouvrir les programmes réalisés, en cours ou a venir selon le bouton clicquer
-  openListeProgrammes(valeur: any){ // On recupère le type de programme et on envoi à la page concernée
-    this.navCtrl.push(ListeProgrammesPage, valeur);
-    //{typeDeProgramme: 'rea'}
+  openPage(componentString : string, indicePage: number, valeur?: any){ // On recupère le type de programme et on envoi à la page concernée 
+    this.navCtrl.setRoot( componentString , valeur);
+    this.events.publish('open:menu', indicePage); // On lance l'évenement avec la page correspondante pour que la page qui gère le menu la recoive et mette ca en active dans le menu
   }
+
 //Methode pour ouvrir la page recherche bien
-  openTrouverBien(valeur: any){ // On recupère le statut (louer/vendre)
-    this.navCtrl.push(TrouverBienPage, valeur);
+  openAVendre(valeur: any){ // On recupère le statut (louer/vendre)
+    let toastAVendre = this.toastCtrl.create({
+      message: 'Pas de biens à vendre pour l\'instant',
+      duration: 2000,
+      position: 'top'
+    });
+    toastAVendre.present();
   }
-//Methode pour ouvrir CONTACT
-  openContact(valeur: any){ // On recupère le statut (louer/vendre)
-    this.navCtrl.push(ContactPage, valeur);
-  }
+
 //Methode pour ouvrir l'ESPACE
   openBrowser(url: string){ 
     //On definit les options et on donne l'url

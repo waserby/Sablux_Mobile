@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, forwardRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ProgrammesPartialComponent } from '../../components/programmes-partial/programmes-partial';
 
@@ -9,13 +9,18 @@ import { ProgrammesPartialComponent } from '../../components/programmes-partial/
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+@IonicPage(
+  {
+    name: 'page-liste-programmes'
+  }
+)
 @Component({
   selector: 'page-liste-programmes',
   templateUrl: 'liste-programmes.html',
 })
 export class ListeProgrammesPage implements OnInit {
-  @ViewChild(ProgrammesPartialComponent) childProgrammes: ProgrammesPartialComponent;
+  @ViewChild(forwardRef(() => ProgrammesPartialComponent))
+  private childProgrammes: ProgrammesPartialComponent;
   TypeProgrammeAccueil: String;
   typeProg : String;
 
@@ -30,6 +35,9 @@ export class ListeProgrammesPage implements OnInit {
     console.log('ionViewDidLoad ListeProgrammesPage');
   }
 
+  ionViewDidEnter(){
+    console.log("Entrer Liste PROGRAMMES");
+  }
   ionViewWillLeave(){
     //En quittant l a page je unsunscribe les subscribes effectué
     // this.eventConnect.unsubscribe();

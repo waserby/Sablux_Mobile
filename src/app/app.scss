@@ -42,3 +42,63 @@
 .toastStyle{
     color: #913E98;
 }
+
+.boutonDown { //Bouton rechercher(page filtre) et envoyer (page contact)
+    position: fixed;
+    bottom: 0px;
+    margin-bottom: 0px;
+}
+
+//------------DESIGN--DU--MENU----le dégradé de couleur--Les pages---------------
+$SIDEMENU_TOP: #913E98;
+$SIDEMENU_BOTTOM: #363536;
+$SIDEMENU_TRANSPARENCY: rgba(255,255,255,0.4);
+
+.side-menu-gradient{
+    background: -webkit-linear-gradient(top, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    background: -o-linear-gradient(bottom, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    background: -moz-linear-gradient(bottom, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    background: linear-gradient(to bottom, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    // background: -webkit-linear-gradient(left top, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    // background: -o-linear-gradient(bottom right, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    // background: -moz-linear-gradient(bottom right, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+    // background: linear-gradient(to bottom right, $SIDEMENU_TOP, $SIDEMENU_BOTTOM);
+}
+
+.menu-img{
+    img {
+        width:50%;
+        border-radius:50%;
+        margin:10px;
+        // border: 1px solid #913E98;
+        border: 4px solid $SIDEMENU_TRANSPARENCY;
+        -webkit-box-shadow: 0px 0px 142px -37px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 142px -37px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 142px -37px rgba(0,0,0,0.75);
+    }
+}
+.header-menu{
+    font-weight: 100;
+    color: white;
+    font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+.side-menu-item{
+    background:none;
+    color: white;
+    font-size: larger;
+    font-weight:600;    
+    border: 0px !important;
+    // margin-bottom: 7px;
+    // .item-content{
+    //     background:none;
+    //     &.activated{
+    //         background: $SIDEMENU_TRANSPARENCY;
+    //     }
+    // }
+}
+.activeHighlight{
+    background-color: $SIDEMENU_TRANSPARENCY;
+}
+//------------FIN------dégradé-de-couleur-du-menu---------------------
+

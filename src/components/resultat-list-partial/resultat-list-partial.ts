@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Input } from '@angular/core';
 import { ProgsProviderFireApi } from '../../providers/progs/progs';
 import { ViewController, AlertController, LoadingController, NavController } from 'ionic-angular';
@@ -26,10 +26,12 @@ import { Network } from '@ionic-native/network';
 export class ResultatListPartialComponent implements OnInit {
   @Input() itemIncomes: any; //Réception
   @Input() arrayProduitsFromRequeteFiltre: any; //Réception 
+  @Output() sendNbreResultToParent = new EventEmitter<number>();
  
   arrayResult: any[]=[]; //Tableau des resultats à afficher après filtre selon CRITERES
+  numberResult : number;
   urlProduits: string;
-  numeroSablux="338694000"; //Numéro SABLUX
+  numeroSablux = "338694000"; //Numéro SABLUX
   loader: any; //Loader
 
   //--------------------------------------------------METHODES LIFECYCLE----------------------------------------
@@ -65,27 +67,27 @@ export class ResultatListPartialComponent implements OnInit {
   }
   
   //For Api REST
-  traitementProduits() {
+  traitementProduits() { //   || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 0))  Set un tableau avec les résultat et renvoi le nbre de résultat.
       //---------------------------------FILTRAAAGE---------------------------------
-      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1))
+      if(( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (+this.itemIncomes.prix == 0))
       {
         //Cas ALL none
         this.arrayResult = this.arrayProduitsFromRequeteFiltre;
       
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix == 1)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (+this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (+this.itemIncomes.prix == 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type == "none") && (+this.itemIncomes.prix != 0)) ) {
         //Cas ou une seule valeur est donnée (que ce soit zone, type ou prix)
         for (let item of this.arrayProduitsFromRequeteFiltre) {
-          if((item.zone == this.itemIncomes.zone) || (item.typeproduit == this.itemIncomes.type) || (item.price <= this.itemIncomes.prix)) {
+          if((item.zone == this.itemIncomes.zone) || (item.typeproduit == this.itemIncomes.type) || (item.price <= +this.itemIncomes.prix)) {
             this.arrayResult.push(item);
           }else{
             //Cas ou le seul critère ne match pas avec API
             console.log('Cas 1: item don\'t match '+item.zone+'  Type produit  '+item.typeproduit+' PRIX  '+item.price)          }
         }
 
-      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix == 1) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (this.itemIncomes.prix != 1)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (this.itemIncomes.prix != 1)) ) {
+      }else if((( this.itemIncomes.zone != "none") && (this.itemIncomes.type != "none") && (+this.itemIncomes.prix == 0) ) || (( this.itemIncomes.zone != "none") && (this.itemIncomes.type == "none") && (+this.itemIncomes.prix != 0)) || (( this.itemIncomes.zone == "none") && (this.itemIncomes.type != "none") && (+this.itemIncomes.prix != 0)) ) {
         //Cas ou 2 critères sont données 
         for (let item of this.arrayProduitsFromRequeteFiltre) {
-          if(((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type)) || ((item.zone == this.itemIncomes.zone) && (item.price <= this.itemIncomes.prix)) || ((item.typeproduit == this.itemIncomes.type) && (item.price <= this.itemIncomes.prix))  ){      
+          if(((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type)) || ((item.zone == this.itemIncomes.zone) && (item.price <= +this.itemIncomes.prix)) || ((item.typeproduit == this.itemIncomes.type) && (item.price <= +this.itemIncomes.prix))  ){      
             this.arrayResult.push(item);
           }else{
             //Cas ou les 2 critères ne match pas avec API
@@ -95,7 +97,7 @@ export class ResultatListPartialComponent implements OnInit {
       }else {
         //Cas ou tous les critères sont renseignés.
         for (let item of this.arrayProduitsFromRequeteFiltre) {
-          if((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type) && (item.price <= this.itemIncomes.prix)) {//ZONE
+          if((item.zone == this.itemIncomes.zone) && (item.typeproduit == this.itemIncomes.type) && (item.price <= +this.itemIncomes.prix)) {//ZONE
 
             this.arrayResult.push(item);
             console.log("GOOD ZONE:  "+item.zone+"  TYPE : "+item.typeproduit+" etage "+item.niveauetage+" et qui coute "+item.price);
@@ -106,8 +108,10 @@ export class ResultatListPartialComponent implements OnInit {
           } //If ZONE
         }
       }
+      this.numberResult = this.arrayResult.length;
+      this.sendNbreResultToParent.emit(this.numberResult);// On emet le nombre de resultat
+      //console.log("Voici le tableau : "+this.arrayResult);
       //------------------------FINNNN---------FILTRAAAGE---------------------------------
-      console.log("Voici le tableau : "+this.arrayResult);
   }
 
   //Methodes pour tester la connection waserbywork
@@ -118,6 +122,11 @@ export class ResultatListPartialComponent implements OnInit {
   // Method that returns true if the user is not connected to internet
     private isOffline(): boolean {
       return this.network.type.toLowerCase() === 'none';
+    }
+
+  //Methode Nbre de résultat
+    countResult() : number{
+      return this.arrayProduitsFromRequeteFiltre;
     }
 
   //--------------Loader Methode--------------

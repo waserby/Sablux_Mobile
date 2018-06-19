@@ -7,5 +7,10 @@ page-detail-programme {
     .no-padding {// Pour enlever le padding pour que ca soit full
         padding: 0px !important;
     }
+
+    .boutonDown {
+        position: fixed;
+        bottom: 0px;
+    }
     
 }

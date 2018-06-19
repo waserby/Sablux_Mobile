@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController, NavController, AlertController } from 'ionic-angular';
+import { Nav, Platform, LoadingController, NavController, AlertController, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
@@ -13,6 +13,8 @@ import { SlidesPage } from '../pages/slides/slides';
 import { ListeProgrammesPage } from '../pages/liste-programmes/liste-programmes';
 import { TrouverBienPage } from '../pages/trouver-bien/trouver-bien';
 import { ContactPage } from '../pages/contact/contact';
+import { InAppBrowserOptions, InAppBrowser } from '@ionic-native/in-app-browser';
+import { Page } from 'ionic-angular/navigation/nav-util';
 
 @Component({
   templateUrl: 'app.html'
@@ -22,22 +24,30 @@ export class MyApp {
 
   rootPage: any = HomePage; // Page principale
   loader: any;
+  activePage: any;
+  pages: Array<{title: string, component: any, icone: string}>;
 
-  pages: Array<{title: string, component: any}>;
-
-  constructor (private backgroundMode: BackgroundMode, private oneSignal : OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
+  constructor (public events: Events, private iab: InAppBrowser, private backgroundMode: BackgroundMode, private oneSignal : OneSignal, public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public loadingCtrl: LoadingController, public storage: Storage) {
     this.initializeApp();
     this.backgroundMode.enable();//L'application continue à tourner même en BACKGROUND
+    
+    //Evenement pour les cases actives du menu
+    events.subscribe('open:menu', (indicePage) => {
+      console.log('Welcome '+indicePage);
+      this.activePage = this.pages[indicePage];
+    });
 
     // LA LISTE DES PAGES used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Accueil', component: HomePage }, // Pas de HomePage car ca crée des repetitions sur les alertes lancées
+      { title: 'Accueil', component: HomePage, icone:'home' }, // Pas de HomePage car ca crée des repetitions sur les alertes lancées
       //{ title: 'Liste', component: ListPage },
-      { title: 'Nos programmes immobiliers', component: ListeProgrammesPage },
-      { title: 'Trouver un bien immobilier', component: TrouverBienPage },
-      { title: 'Nous contacter', component: ContactPage }
+      { title: 'Nos programmes immobiliers', component: ListeProgrammesPage, icone:'grid' },
+      { title: 'Trouver un bien immobilier', component: TrouverBienPage, icone:'search' },
+      { title: 'Espace membre', component: TrouverBienPage, icone:'person' },
+      { title: 'Contacter SABLUX', component: ContactPage, icone:'contacts' }
 
     ];
+    this.activePage = this.pages[0];
 
     //ONESGINAL pour Notifications à distance
       this.oneSignal.startInit('3a0b8b5b-9ef2-431f-bb19-046403dea55c', '549400626727'); //First: APP id oneSignal Second: Identifiant de l'expediteur
@@ -56,6 +66,13 @@ export class MyApp {
           //this.storage.get('stockerBool').then(data => { alert(data) });
           this.storage.set('stockerBool', false);// Je met la variable à false pour que les services soient rechargés
           this.nav.push(TrouverBienPage);// JE vais voir sur la page
+          // this.presentLoading();
+          // setTimeout(() => {
+          //   this.loader.dismiss();
+          //   this.storage.set('stockerBool', false);// Je met la variable à false
+          //   this.nav.push(TrouverBienPage);// JE vais voir sur la page
+          // }, 3000);// 2 HEURES 7200000
+
         } else if ((action == 'realiser') || (action == 'cours') || (action == 'venir')) {
           
           let valeur = {typeDeProgramme: action };
@@ -116,7 +133,32 @@ export class MyApp {
 
   openPage(page) {
     //Ouvrir une page
-    this.nav.push(page.component); // Pas de set root car ca amène des actions repetitives
+    if (page.title == 'Espace membre') {
+
+      this.openBrowser('http://espace-sablux.technosmartsn.com/'); // Pas de set root car ca amène des actions repetitives
+
+    } else{
+
+      this.nav.setRoot(page.component);
+
+    }
+    this.activePage = page; // On set la page active
+  }
+
+  checkActive(page) : boolean { //Regarde si la page en paramètre est active et retourne true ou false
+    return page == this.activePage;
+  }
+
+  //Methode pour ouvrir l'ESPACE
+  openBrowser(url: string){ 
+    //On definit les options et on donne l'url
+    const options: InAppBrowserOptions = {
+      zoom:'no',
+      location:'no',
+      toolbar:'no'
+    };
+    const browser = this.iab.create(url,'_self',options);
+    browser.show();
   }
 
 }

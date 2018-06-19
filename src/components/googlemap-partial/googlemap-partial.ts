@@ -76,7 +76,7 @@ export class GooglemapPartialComponent {
         this.map.addMarker({
           // title: this.chooseprog.nom.toString(), //custom
           title: this.marker_title.toString(), //custom
-          icon: 'sablux',
+          icon: 'blue',
           animation: 'DROP',
           position: {
             lat: this.progForMap.latitude,

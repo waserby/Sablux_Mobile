@@ -14,7 +14,7 @@ import { Produit } from '../../models/produit-model';
   {
     name: 'page-resultat-recherche'
   }
-  )
+)
 @Component({
   selector: 'page-resultat-recherche',
   templateUrl: 'resultat-recherche.html',
@@ -22,6 +22,7 @@ import { Produit } from '../../models/produit-model';
 export class ResultatRecherchePage implements OnInit {
   incomes = {}; //On garde les critères du USER
   tabAllProduits = {}; //On garde les critères du USER
+  numberResultat: number;
 
   //METHODES LIFECYCLE
   constructor(public viewCtrl: ViewController, public navCtrl: NavController, public navParams: NavParams, private progsServiceFireApi: ProgsProviderFireApi) {
@@ -40,5 +41,9 @@ export class ResultatRecherchePage implements OnInit {
   //Dismiss
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  getNumberResult(count) {
+    this.numberResultat = count;
   }
 }
